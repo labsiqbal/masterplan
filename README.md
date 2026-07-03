@@ -44,6 +44,10 @@ Hand `EXECUTE.md` to any capable coding agent, and the build runs end-to-end. If
 - **Revise mode vs. stale docs.** Changes enter through the front door: impact analysis, version bump, changelog, invalidated milestones flagged for rework. The executor refuses ad-hoc scope changes (the change-guard rule), so the PRD stays truthful for the build's entire life.
 - **Resumable both ways.** The generator checkpoints its decisions as it goes; the executor checkpoints its milestones with evidence. Neither a dead session nor a dead build run starts over.
 
+## Worked example
+
+A complete package produced by this skill — including the recorded decisions, the red-team validation report (4 blockers caught and resolved before writing), and the final PRD/EXECUTE/STATUS — lives in [`examples/prd-ai-tools-affiliate/`](examples/prd-ai-tools-affiliate/).
+
 ## Install
 
 Copy `skills/cut-once/` into your agent's skill directory. The skill is plain English with no engine-specific dependencies; any skill-capable agent system (or a human with patience) can follow it.
