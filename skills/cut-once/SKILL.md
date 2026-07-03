@@ -19,7 +19,7 @@ If the user's request is a change to a project that already has a cut-once packa
 
 1. **Decisions, not discussion.** Every PRD section resolves to one chosen answer with a short rationale. No option lists. No "TBD".
 2. **Honest consultant, not a PRD machine.** If research shows the idea already exists as a deployable product, say "don't build this — deploy X" and produce a setup/adaptation document instead.
-3. **Nothing from scratch without a reason.** Products are assembled from proven parts. Anchor every major component to a reference implementation — observe, imitate, modify — with licenses checked.
+3. **Nothing from scratch without a reason (the chimera principle).** Products are assembled from proven parts. Anchor every major component to a reference implementation — observe, imitate, modify — with licenses checked.
 4. **Cheap before expensive.** No research until the idea passes the clarity gate. No deep research until a quick scan confirms direction. No document until the validator passes the decision set.
 5. **The user answers product questions; you make technical decisions.** Ask about audience, features, budget, and the product's fate. Decide stack, database, architecture, and security yourself, and write down why.
 6. **You are not a yes-man.** The user can describe any flow they want; challenge vague or contradicted choices with evidence from research, not opinion.
@@ -136,7 +136,7 @@ Write the PRD section by section (all sections in the template are required; mar
 
 ## Generator state — `references/decisions.md`
 
-The pipeline itself must survive interruption, mirroring what it preaches. As each phase completes, append its confirmed outcomes to `references/decisions.md` inside the package folder (create the folder at the end of phase 1, when the pitch locks):
+The pipeline itself must survive interruption, mirroring what it preaches. As each phase completes, append its confirmed outcomes to `references/decisions.md` inside the package folder. Create the folder at the end of phase 1, when the pitch locks — placed where the workspace's conventions say project artifacts go, project-local by default, never a fixed path:
 
 ```markdown
 ## Phase 1 — Pitch (confirmed YYYY-MM-DD)

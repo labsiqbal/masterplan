@@ -1,6 +1,6 @@
 # Question Bank
 
-A **menu, not a script**. Aim for ~12 questions total across the whole pipeline; let every answer eliminate later questions. One question per turn. Multiple choice wherever the answer space allows — mark a recommended option with a one-line reason, and **every question ends with the escape hatch**:
+A **menu, not a script**. Phase 1 uses only what the idea dump leaves unclear; aim for ~12 questions in the phase-3 interrogation. Let every answer eliminate later questions. One question per turn. Multiple choice wherever the answer space allows — mark a recommended option with a one-line reason, and **every question ends with the escape hatch**:
 
 > **You decide** — make the call and record your rationale in the PRD.
 
@@ -16,7 +16,7 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 2. **Who is it for?** — "Who opens this on day one: you personally / a specific team / paying strangers?"
 3. **Core action?** — "The one thing a user does with it — what is it? ⟨guess A⟩ / ⟨guess B⟩ / something else?"
 4. **Success in one sentence?** — "Six months in, what's true if this worked?"
-5. **Scope shape** — "Is this a single focused tool, or a platform with several parts?" (platforms may need decomposition into multiple packages)
+5. **Scope shape** — "Is this a single focused tool, or a platform with several parts?"
 6. **Pitch confirmation (GATE A, mandatory)** — present the pitch paragraph: "⟨what / for whom / core action⟩ — is that exactly what you mean?" yes → research / no → keep clarifying.
 
 ## Phase 3 — Interrogation
@@ -47,7 +47,7 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 ## Adaptive rules
 
 - **Fate = "internal, just me"** → skip 13, 15–16 become optional, marketing-ish questions never asked; security scales down (PRD §12 notes it).
-- **Verdict = "Don't build"** → skip 9–13 entirely; interrogation shrinks to setup preferences for the chosen existing product.
+- **Verdict = "Don't build"** → skip 9–11 and 13; keep 12 (budget) — deploying an existing product still costs hosting/API money. Interrogation shrinks to setup preferences for the chosen product.
 - **Budget = ~0** → phase 4 constrains to free tiers; flag any feature that can't survive that before continuing.
 - **User picked "you decide" ≥3 times in a row** → stop asking; decide the rest yourself, list all agent decisions at GATE C for one batch review.
 - **Answer already present in the idea dump** → never ask it again; record it as confirmed.

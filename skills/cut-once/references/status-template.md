@@ -1,11 +1,6 @@
 # STATUS.md Template
 
-Copy into the package's `STATUS.md`, pre-filled with the build order from PRD section 18. cut-once creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
-
-**Marker convention:**
-- `[ ]` pending
-- `[x]` done — only with evidence in the note (evidence rule in EXECUTE.md)
-- `[!]` needs rework — set by revise mode when a change invalidates a built milestone. Never silently uncheck history; `[!]` preserves the fact that it was built once.
+Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from PRD section 18. cut-once creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
 
 ---
 
@@ -14,6 +9,11 @@ Copy into the package's `STATUS.md`, pre-filled with the build order from PRD se
 **PRD version:** v1.0
 **Started:** ⟨YYYY-MM-DD⟩
 **Last updated:** ⟨YYYY-MM-DD⟩ by ⟨agent/owner⟩
+
+**Marker convention:**
+- `[ ]` pending
+- `[x]` done — only with evidence in the note (evidence rule in EXECUTE.md)
+- `[!]` needs rework — set by revise mode when a change invalidated a built milestone; treat as unchecked and rebuild per its note. Never silently uncheck history; `[!]` preserves the fact that it was built once.
 
 ## Milestones
 
