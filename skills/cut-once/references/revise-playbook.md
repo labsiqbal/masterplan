@@ -47,5 +47,6 @@ In one pass:
 3. **Append the changelog entry**: `- **v⟨x.y⟩ — YYYY-MM-DD — ⟨one-line summary⟩**`
 4. **Update STATUS.md**: append new milestones; flag invalidated ones `[!] needs rework` with a note pointing at the changelog entry. **Never silently uncheck history** — `[!]` preserves the fact that it was built once and needs revisiting.
 5. **Append to `references/decisions.md`**: a `## Revision v⟨x.y⟩` block with the new decisions and any rejected alternatives (which also land in PRD §20).
+6. **Re-export `PRD.html`** — `PRD.md` is the source of truth; a stale HTML deck is the same lie a stale PRD is. Regenerate it per `references/html-export.md` so the walkthrough matches the new version.
 
 Then hand back: the executing agent resumes with EXECUTE.md as usual — the resume rule naturally picks up `[!]` items and new milestones.

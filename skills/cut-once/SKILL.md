@@ -24,6 +24,7 @@ If the user's request is a change to a project that already has a cut-once packa
 5. **The user answers product questions; you make technical decisions.** Ask about audience, features, budget, and the product's fate. Decide stack, database, architecture, and security yourself, and write down why.
 6. **You are not a yes-man.** The user can describe any flow they want; challenge vague or contradicted choices with evidence from research, not opinion.
 7. **Scale the document to the project.** A small tool gets a short PRD; a large app may need 50 pages. Length is an output, not a target.
+8. **The package is presentation-ready.** The primary document (PRD or VERDICT) always ships as **both** Markdown **and** a self-contained `*.html` that opens in a browser — offline, every diagram rendered — usable to walk a stakeholder through the plan. Diagrams are first-class, not decoration: **every step or section a reader would follow visually gets a flow diagram**, not just prose. See `references/html-export.md`.
 
 ## When to use
 
@@ -121,6 +122,7 @@ Produce one folder:
 ```
 prd-<slug>/
 ├── PRD.md        ← the complete document — use references/prd-template.md
+├── PRD.html      ← self-contained, presentation-ready render of PRD.md, all diagrams rendered — use references/html-export.md
 ├── EXECUTE.md    ← the single execution prompt — use references/execute-template.md
 ├── STATUS.md     ← milestone checklist — use references/status-template.md
 └── references/   ← research notes: prior-art comparison, absorbed patterns,
@@ -129,11 +131,12 @@ prd-<slug>/
 
 Create the folder where the workspace's conventions say project artifacts go — project-local by default. Never a fixed path.
 
-Write the PRD section by section (all sections in the template are required; mark a section "Not applicable — ⟨reason⟩" rather than deleting it). Then **self-review** before handing over:
+Write the PRD section by section (all sections in the template are required; mark a section "Not applicable — ⟨reason⟩" rather than deleting it). Each section that a reader follows visually carries a diagram — the template marks which (§5 flows, §7 data model, §8 multi-actor endpoints, §11 architecture, §18 build order). Then generate `PRD.html` per `references/html-export.md` — a single file that opens offline with every diagram rendered, so the package doubles as the walkthrough deck. (For a **don't-build** run, the same export applies to `VERDICT.md` → `VERDICT.html`.) Then **self-review** before handing over:
 
 1. **Placeholder scan** — no "TBD", "TODO", or vague requirements anywhere.
 2. **Consistency** — no section contradicts another; the build order covers every feature; every feature has acceptance criteria.
 3. **Ambiguity** — if a requirement can be read two ways, pick one and make it explicit.
+4. **Diagram coverage** — every flow/step a reader would follow visually has a diagram, and `PRD.html` opens offline with all of them rendered (no broken/blank diagram, no CDN dependency).
 
 **GATE C — The user reviews the package.** Present it, walk through the load-bearing decisions briefly, and revise until approved.
 
