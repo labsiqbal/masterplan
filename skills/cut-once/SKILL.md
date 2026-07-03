@@ -20,7 +20,7 @@ If the user's request is a change to a project that already has a cut-once packa
 1. **Decisions, not discussion.** Every PRD section resolves to one chosen answer with a short rationale. No option lists. No "TBD".
 2. **Honest consultant, not a PRD machine.** If research shows the idea already exists as a deployable product, say "don't build this — deploy X" and produce a setup/adaptation document instead.
 3. **Nothing from scratch without a reason (the chimera principle).** Products are assembled from proven parts. Anchor every major component to a reference implementation — observe, imitate, modify — with licenses checked.
-4. **Cheap before expensive.** No research until the idea passes the clarity gate. No deep research until a quick scan confirms direction. No document until the validator passes the decision set.
+4. **Cheap before expensive — gate the spend, not the tool.** Tools and research are allowed in *any* phase once there is a clear purpose for the spend. Reading an existing target (codebase, product, files) read-only to ground a fuzzy idea is cheap and encouraged early. What's held back is *expensive or online* research spent on a still-shallow target that may change tomorrow: clarify the target before prior-art/web research, quick-scan before a deep-dive, validate before writing the document. The rule is never "don't research" — it's "don't research *deep/online* while the goal is still shallow."
 5. **The user answers product questions; you make technical decisions.** Ask about audience, features, budget, and the product's fate. Decide stack, database, architecture, and security yourself, and write down why.
 6. **You are not a yes-man.** The user can describe any flow they want; challenge vague or contradicted choices with evidence from research, not opinion.
 7. **Scale the document to the project.** A small tool gets a short PRD; a large app may need 50 pages. Length is an output, not a target.
@@ -56,9 +56,9 @@ Before any research, you must be able to write a **researchable pitch** — one 
 2. **who** it is for,
 3. the user's **core action** (the one thing a user does with it).
 
-If you cannot write that paragraph yet, run a **clarification loop**: conversation and model knowledge only — **no web research, no tools**. Offer directions ("do you mean something like this, or like that?") until the shape locks. Research is the most expensive phase; never spend it on an idea that may change tomorrow.
+If you cannot write that paragraph yet, run a **clarification loop** until the shape locks: conversation, model knowledge, and — when the idea attaches to an existing codebase, product, or files — **read-only inspection of that target**. That grounding is cheap and often the fastest way to lock the pitch; it also catches false premises (e.g. "my app has no memory" when it already does). Offer directions ("do you mean something like this, or like that?") until the shape is firm. What you hold back here is *online / prior-art* research — the expensive phase (Phase 2's job) — not tools in general; don't spend it on a pitch that may still change tomorrow.
 
-**GATE A — Do not begin research until the user confirms the pitch.** Present the paragraph and get an explicit "yes, that's what I mean."
+**GATE A — Lock the pitch before spending prior-art / online research.** Present the paragraph and get an explicit "yes, that's what I mean." Read-only grounding of an existing target (above) is fine *before* this gate — it's often what makes the pitch confirmable. If the user has fully delegated or is away, you may self-confirm and proceed **only toward *less* spend** (e.g. a don't-build or narrower-scope call); mark it provisional/agent-decided so a returning user can correct it. Never self-confirm your way *into* the expensive phases.
 
 ## Phase 2 — Prior-art research + honest verdict
 
@@ -71,11 +71,12 @@ Follow `references/research-playbook.md`. Staged, so waste stays cheap:
 
 | Verdict | Meaning | The package becomes |
 |---|---|---|
-| **Don't build** | A deployable product already covers the idea | A setup/adaptation document for that product |
+| **Don't build — deploy X** | A deployable product already covers the idea | A setup/adaptation document for that product |
+| **Don't build (yet)** | The premise is false, or the need isn't real/urgent enough to justify building now (YAGNI) | An **investigation record** — `VERDICT.md` (use `references/verdict-template.md`): what reality/the code actually shows, why not now, a zero-build fallback, and concrete revisit-triggers that flip it to build |
 | **Build with differentiation** | Similar things exist, but there is a gap | A full PRD that states **the one clear difference** justifying the build |
 | **Build fresh** | No meaningful prior art | A full PRD; components still anchored to references where possible |
 
-Deliver the verdict honestly even when the user hoped to build. "Deploy X, save three months" is a success, not a failure.
+Deliver the verdict honestly even when the user hoped to build. "Deploy X, save three months" is a success, not a failure. On either **don't-build** verdict the pipeline **stops here**: the package is that one document + `references/` (decisions.md, audits/scan) — no PRD/EXECUTE/STATUS, skip Phases 3–6. A don't-build reached honestly is a finished, successful run.
 
 ## Phase 3 — Product/business interrogation
 
@@ -112,6 +113,8 @@ Before writing anything, submit the decision set to a **fresh agent with no conv
 Validation runs **by default**. The user may skip it for tiny projects. On platforms without subagent support, run the same rubric yourself in a clean context (a fresh conversation or a deliberate fresh-eyes pass) — weaker, but the gate still exists.
 
 ## Phase 6 — Write the package
+
+*(Build verdicts only. A don't-build verdict stops at Phase 2 — see its verdict row and `references/verdict-template.md`.)*
 
 Produce one folder:
 
