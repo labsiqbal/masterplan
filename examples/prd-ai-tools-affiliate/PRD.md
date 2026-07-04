@@ -2,6 +2,8 @@
 
 *Produced by masterplan. Every section is a decision with a rationale — nothing here is open for re-litigation during the build (see §20 for choices that might look like mistakes). Version: §22.*
 
+> 📊 **Open [`PRD.html`](PRD.html) for the rendered deck** — every diagram drawn, a Present mode (▶) to walk a stakeholder through it, and clean Print-to-PDF. This Markdown is the source of truth; the HTML is generated from it.
+
 ## 1. Summary & problem
 
 A curated AI-tools review site that earns affiliate commissions. People trying to pick the right AI tool for a concrete job currently get scraped directories with no opinion or SEO spam; this site gives them a hands-on comparison ("best AI tool for X") with a ranked verdict and a tracked outbound link to the winner. The one-shot build delivers the **machine** — site, schemas, redirect layer, content pipeline — with owner-verified tool facts and affiliate IDs as swappable inputs; the agent never invents tool facts.
@@ -60,14 +62,28 @@ First user: a solo maker or small-business owner choosing an AI tool for one con
 
 ## 5. User flows
 
-```mermaid
-flowchart TD
-    A[Google: best AI tool for X] --> B[Comparison article]
-    B --> C[Verdict table / our pick]
-    C --> D[/go/tool-slug/]
-    D --> E[Vendor site - affiliate-tagged when active]
-    F[Browse tags] --> G[Tool profile] --> D
-    B --> G
+```d2
+# name: flow
+direction: down
+classes: {
+  entry: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
+  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
+  ext:   { style: { fill: "#ccfbf1"; stroke: "#14b8a6"; font-color: "#0f766e" } }
+}
+google: "Google: best AI tool for X" { shape: oval; class: entry }
+browse: "Browse tags" { shape: oval; class: entry }
+article: "Comparison article" { class: proc }
+verdict: "Verdict table / our pick" { class: proc }
+profile: "Tool profile" { class: proc }
+go: "/go/<slug> — log + 302" { class: proc }
+vendor: "Vendor site (affiliate-tagged)" { class: ext }
+google -> article: { style.animated: true }
+article -> verdict
+verdict -> go: { style.animated: true }
+article -> profile
+browse -> profile: { style.animated: true }
+profile -> go: { style.animated: true }
+go -> vendor: { style.animated: true }
 ```
 
 Success end-state: outbound click through `/go/` logged.
@@ -111,6 +127,34 @@ src/content/tools/       ← profile markdown (generated from tools.json)
 }
 ```
 
+The tool entry is the single source of truth; the generator derives one profile page per tool and pulls verified facts into the comparison articles:
+
+```d2
+# name: er
+direction: right
+classes: {
+  store: { style: { fill: "#fef3c7"; stroke: "#f59e0b"; font-color: "#92400e" } }
+  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
+}
+tool: "data/tools.json — tool entry" {
+  shape: sql_table
+  slug: string { constraint: primary_key }
+  name: string
+  url: string
+  affiliateUrl: "string | null"
+  affiliateStatus: "none | applied | active"
+  category: string
+  tags: "string[]"
+  pricing: "{ model, from, verifiedOn }"
+  verdict: string
+  lastReviewed: date
+}
+profiles: "src/content/tools/* — profiles" { class: proc }
+comparisons: "src/content/comparisons/* — articles" { class: proc }
+tool -> profiles: "generator: one page per tool" { style.animated: true }
+tool -> comparisons: "verified facts" { style.animated: true }
+```
+
 ## 8. API contracts
 
 One serverless function:
@@ -121,7 +165,21 @@ Behavior: log { slug, referrer, ts } → 302 to affiliateUrl ?? url
 Errors:   unknown slug → 404 page
 ```
 
-No other backend surface.
+No other backend surface. The click is logged, then the visitor is redirected — the affiliate tag is swapped in only once a program is approved:
+
+```d2
+# name: seq
+shape: sequence_diagram
+visitor: Visitor
+fn: "Pages Function /go/:slug"
+log: "Analytics Engine (click log)"
+vendor: "Vendor site"
+visitor -> fn: "GET /go/<slug>"
+fn -> log: "log {slug, referrer, ts}"
+fn -> visitor: "302 to affiliateUrl ?? url"
+visitor -> vendor: "follow redirect"
+fn -> visitor: "unknown slug -> 404"
+```
 
 ## 9. External integrations & AI roles
 
@@ -148,12 +206,28 @@ No other backend surface.
 
 Fully static site + one edge function.
 
-```mermaid
-flowchart LR
-    G[Git repo] -->|build| P[Cloudflare Pages]
-    T[data/tools.json] -->|generator| C[Content collections] --> P
-    P --> V[Visitor]
-    V -->|/go/slug| F[Pages Function: log + 302] --> X[Vendor site]
+```d2
+# name: arch
+direction: right
+classes: {
+  entry: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
+  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
+  store: { style: { fill: "#fef3c7"; stroke: "#f59e0b"; font-color: "#92400e" } }
+  ext:   { style: { fill: "#ccfbf1"; stroke: "#14b8a6"; font-color: "#0f766e" } }
+}
+repo: "Git repo" { class: proc }
+tools: "data/tools.json" { shape: cylinder; class: store }
+gen: "Content collections (generator)" { class: proc }
+pages: "Cloudflare Pages (static)" { class: proc }
+fn: "Pages Function: log + 302" { class: proc }
+visitor: Visitor { shape: oval; class: entry }
+vendor: "Vendor site" { class: ext }
+repo -> pages: build { style.animated: true }
+tools -> gen: generate
+gen -> pages
+pages -> visitor: serve
+visitor -> fn: "/go/<slug>" { style.animated: true }
+fn -> vendor: 302 { style.animated: true }
 ```
 
 Stateless everywhere; the click log is append-only analytics, not application state.
@@ -205,6 +279,31 @@ Day one (build deliverable): **5 comparison articles + 15 tool profiles**, gener
 7. **M7 — Deploy:** Cloudflare Pages live on the domain, analytics wired, `/go/` logging verified in production.
 8. **M8 — Full QA pass:** every acceptance criterion in §4 verified with evidence; Lighthouse ≥90 performance / ≥95 SEO; layouts verified at 375px.
 
+```d2
+# name: build
+direction: right
+classes: {
+  proc: { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
+  ext:  { style: { fill: "#ccfbf1"; stroke: "#14b8a6"; font-color: "#0f766e" } }
+  done: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
+}
+m1: "M1 · Scaffold" { class: proc }
+m2: "M2 · Schemas & data" { class: proc }
+m3: "M3 · Redirect layer" { class: proc }
+m4: "M4 · Layouts" { class: proc }
+m5: "M5 · Legal & SEO" { class: proc }
+m6: "M6 · Pipeline + seed" { class: proc }
+m7: "M7 · Deploy" { class: ext }
+m8: "M8 · QA pass" { class: done }
+m1 -> m2: { style.animated: true }
+m2 -> m3: { style.animated: true }
+m3 -> m4: { style.animated: true }
+m4 -> m5: { style.animated: true }
+m5 -> m6: { style.animated: true }
+m6 -> m7: { style.animated: true }
+m7 -> m8: { style.animated: true }
+```
+
 ## 19. Non-goals
 
 No user accounts. No tool-submission portal. No newsletter in v1. No auto-scraping of tool data. No sponsored-slot wiring at launch (template supports it; deliberately unconfigured — excluded from acceptance criteria). No CMS — content is git-based by design.
@@ -226,3 +325,4 @@ Commercial personal project; closed repo. Implications: MIT attribution for the 
 ## 22. Version & changelog
 
 - **v1.0 — 2026-07-03 — initial** (post-validation: machine/content split, /go/ layer, legal surface, pipeline-capped seed batch)
+- **v1.1 — 2026-07-04 — presentation** (diagrams re-authored in D2; added data-model, endpoint-sequence, and build-order diagrams; ships a self-contained `PRD.html` deck)
