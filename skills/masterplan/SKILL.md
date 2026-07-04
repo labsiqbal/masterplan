@@ -9,7 +9,7 @@ metadata:
 
 # masterplan
 
-> **Measure twice, cut once.**
+> **Plan once, build once.**
 
 Turn a raw product idea into a **PRD package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template — you are running an investigation that ends in a document where every question is already answered.
 
