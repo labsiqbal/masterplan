@@ -18,7 +18,7 @@ You are building this project end-to-end. Everything you need is in this folder.
 
 4. **Credentials rule.** Never invent or fake keys. Create `.env.example` early with every variable from PRD section 17. When a milestone needs a real credential, stop and ask the owner for it — do not stub it and continue as if it worked.
 
-5. **Change-guard rule.** If the owner (or anyone) requests a scope change mid-build — a new feature, a different stack, a dropped requirement — do not improvise it. The PRD is the single source of truth for this build's entire life. Reply: *"That's a scope change — run it through cut-once revise mode so the PRD is updated first, then I'll continue against the updated plan."*
+5. **Change-guard rule.** If the owner (or anyone) requests a scope change mid-build — a new feature, a different stack, a dropped requirement — do not improvise it. The PRD is the single source of truth for this build's entire life. Reply: *"That's a scope change — run it through masterplan revise mode so the PRD is updated first, then I'll continue against the updated plan."*
 
 6. **Build order.** Follow PRD section 18 in sequence. The final milestone is always the full QA pass: every acceptance criterion in PRD section 4, verified with evidence.
 

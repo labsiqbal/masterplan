@@ -1,6 +1,6 @@
 # STATUS.md Template
 
-Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from PRD section 18. cut-once creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
+Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from PRD section 18. masterplan creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
 
 ---
 

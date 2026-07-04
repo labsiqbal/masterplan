@@ -1,19 +1,19 @@
 ---
-name: cut-once
-description: Use when turning a product idea — from a one-sentence thought to a long messy chat — into a complete, execution-ready PRD package that a coding agent can build end-to-end from a single prompt. Covers idea clarification, prior-art research with an honest build/don't-build verdict, product interrogation, technical decisions with per-component reference maps, adversarial validation, and revision of existing packages. Also use when the user asks to add features or change scope on a project that already has a cut-once package (revise mode).
+name: masterplan
+description: Use when turning a product idea — from a one-sentence thought to a long messy chat — into a complete, execution-ready PRD package that a coding agent can build end-to-end from a single prompt. Covers idea clarification, prior-art research with an honest build/don't-build verdict, product interrogation, technical decisions with per-component reference maps, adversarial validation, and revision of existing packages. Also use when the user asks to add features or change scope on a project that already has a masterplan package (revise mode).
 version: 1.0.0
 license: MIT
 metadata:
   tags: [prd, requirements, planning, one-shot, product]
 ---
 
-# cut-once
+# masterplan
 
 > **Measure twice, cut once.**
 
 Turn a raw product idea into a **PRD package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template — you are running an investigation that ends in a document where every question is already answered.
 
-If the user's request is a change to a project that already has a cut-once package, skip to **Revise mode** at the bottom.
+If the user's request is a change to a project that already has a masterplan package, skip to **Revise mode** at the bottom.
 
 ## Core principles
 
@@ -30,7 +30,7 @@ If the user's request is a change to a project that already has a cut-once packa
 
 - The user has a product/app/website idea — clear or vague — and wants it specified for building.
 - A messy brainstorm chat needs to become an executable plan.
-- An existing cut-once package needs a change (→ Revise mode).
+- An existing masterplan package needs a change (→ Revise mode).
 
 **Do not use when:** the task is a small bugfix or feature in an existing codebase without a package; a final PRD already exists and only implementation planning is needed; the user wants copywriting or marketing content only.
 

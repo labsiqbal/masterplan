@@ -14,7 +14,7 @@ You are building this project end-to-end. Everything you need is in this folder.
 
 5. **Content rule (this project's sharpest edge).** No tool fact — price, feature, verdict — may appear anywhere unless it exists in `data/tools.json`. If seed data for the 5 articles + 15 profiles is missing or incomplete, stop and ask the owner for the verified facts; generating plausible-sounding tool facts is the one way to destroy this product (PRD §1, §20).
 
-6. **Change-guard rule.** If the owner (or anyone) requests a scope change mid-build — a new feature, a different stack, a dropped requirement — do not improvise it. The PRD is the single source of truth for this build's entire life. Reply: *"That's a scope change — run it through cut-once revise mode so the PRD is updated first, then I'll continue against the updated plan."*
+6. **Change-guard rule.** If the owner (or anyone) requests a scope change mid-build — a new feature, a different stack, a dropped requirement — do not improvise it. The PRD is the single source of truth for this build's entire life. Reply: *"That's a scope change — run it through masterplan revise mode so the PRD is updated first, then I'll continue against the updated plan."*
 
 7. **Build order.** Follow PRD section 18 in sequence: M1 scaffold → M2 schemas → M3 redirect layer → M4 layouts → M5 legal & SEO → M6 pipeline + seed batch → M7 deploy → M8 full QA pass.
 

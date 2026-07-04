@@ -2,7 +2,7 @@
 
 **PRD version:** v1.0
 **Started:** —
-**Last updated:** 2026-07-03 by cut-once (package creation)
+**Last updated:** 2026-07-03 by masterplan (package creation)
 
 **Marker convention:**
 - `[ ]` pending

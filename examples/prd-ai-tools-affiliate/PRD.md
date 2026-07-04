@@ -1,6 +1,6 @@
 # PRD: ai-tools-affiliate
 
-*Produced by cut-once. Every section is a decision with a rationale — nothing here is open for re-litigation during the build (see §20 for choices that might look like mistakes). Version: §22.*
+*Produced by masterplan. Every section is a decision with a rationale — nothing here is open for re-litigation during the build (see §20 for choices that might look like mistakes). Version: §22.*
 
 ## 1. Summary & problem
 

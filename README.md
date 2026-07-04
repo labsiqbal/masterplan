@@ -1,4 +1,4 @@
-# cut-once
+# masterplan
 
 > *Measure twice, cut once.*
 
@@ -47,23 +47,23 @@ A complete package produced by the skill — the recorded decisions, the red-tea
 
 ## Install
 
-Copy `skills/cut-once/` into your agent's skill directory. The skill is plain English with no engine-specific dependencies.
+Copy `skills/masterplan/` into your agent's skill directory. The skill is plain English with no engine-specific dependencies.
 
 | System | Location |
 |---|---|
-| Claude Code (user) | `~/.claude/skills/cut-once/` |
-| Claude Code (project) | `.claude/skills/cut-once/` |
-| Codex-style CLIs | `~/.codex/skills/cut-once/` |
+| Claude Code (user) | `~/.claude/skills/masterplan/` |
+| Claude Code (project) | `.claude/skills/masterplan/` |
+| Codex-style CLIs | `~/.codex/skills/masterplan/` |
 | Other runtimes | wherever that runtime discovers `SKILL.md` |
 
 ## Package layout
 
 ```
-cut-once/
+masterplan/
 ├── README.md
 ├── LICENSE                      (MIT)
 └── skills/
-    └── cut-once/
+    └── masterplan/
         ├── SKILL.md             (the pipeline: phases, gates, rules, revise mode)
         └── references/
             ├── prd-template.md          (the full PRD structure)

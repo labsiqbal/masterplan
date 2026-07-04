@@ -1,6 +1,6 @@
 # Decisions Log — ai-tools-affiliate
 
-*Generator state for cut-once. Appended per phase; a fresh session resumes from the first incomplete phase.*
+*Generator state for masterplan. Appended per phase; a fresh session resumes from the first incomplete phase.*
 
 > **Test-drive note:** this package was produced as a worked example with the owner delegating fully — every question resolved via the "you decide" escape hatch, recorded below as agent decisions. GATE A and GATE C are marked *pending user*.
 

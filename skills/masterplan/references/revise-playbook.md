@@ -2,7 +2,7 @@
 
 A PRD that cannot change becomes a lie the first time the product changes — and a stale PRD is worse than none, because the executing agent trusts it. Revise mode is how every change enters an existing package: through the front door, cheaply.
 
-Its counterpart lives in EXECUTE.md — the change-guard rule: *"If the owner requests a scope change mid-build, do not improvise. The PRD is the single source of truth; run the change through cut-once revise mode first."* The executor closes the back door; this playbook makes the front door cheap. Together they keep the document permanently truthful.
+Its counterpart lives in EXECUTE.md — the change-guard rule: *"If the owner requests a scope change mid-build, do not improvise. The PRD is the single source of truth; run the change through masterplan revise mode first."* The executor closes the back door; this playbook makes the front door cheap. Together they keep the document permanently truthful.
 
 ## Step 1 — Load state
 
