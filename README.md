@@ -1,6 +1,6 @@
 # masterplan
 
-> *Plan once, build once.*
+> *Every decision made before the first line of code.*
 
 An agent skill that turns a product idea — a one-sentence thought or a long messy chat — into a **PRD package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted.
 
