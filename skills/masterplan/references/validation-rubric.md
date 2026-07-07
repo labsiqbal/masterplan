@@ -21,7 +21,7 @@ Fill the ⟨blanks⟩ and dispatch:
 
 ## The five axes
 
-1. **Completeness** — what is missing that one-shot execution will crash into? Check at minimum: auth, payments, email/notifications, backups, legal/privacy (user data?), error/empty/loading states, mobile behavior, admin access, day-one content.
+1. **Completeness** — what is missing that one-shot execution will crash into? Check at minimum: auth, payments, email/notifications, backups, legal/privacy (user data?), error/empty/loading states, mobile behavior, admin access, day-one content. For a product with a UI, also confirm nothing in the plan *contradicts* the interaction baseline (`references/ui-baseline.md`) — e.g. a flow that has no error path, a screen with no empty state, a destructive action with no confirmation — and that the industry UX conventions named in §15 aren't quietly dropped. The baseline is assumed present; flag where a decision would break it.
 2. **Consistency** — do any decisions contradict each other? (features that don't fit the budget; a flow referencing a page that doesn't exist; a stack choice that conflicts with the deploy target; acceptance criteria contradicting the data model)
 3. **Feasibility** — is it real? Do the named external APIs exist, at the assumed tier and price? Is the stack proven for this workload? Can the stated budget actually run this?
 4. **Optimization** — is there a meaningfully simpler or cheaper path to the same outcome? (a service instead of a subsystem; one database instead of two; an existing library instead of a custom component)

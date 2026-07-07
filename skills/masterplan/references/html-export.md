@@ -95,7 +95,11 @@ The HTML frame around the diagrams is the same regardless of diagram engine. Ass
   .diagram { margin:1.4rem 0; padding:1.5rem; background:#fff; border:1px solid var(--line);
     border-radius:16px; box-shadow:0 1px 3px rgba(15,23,42,.06), 0 10px 30px rgba(15,23,42,.05);
     overflow-x:auto; color:#1e293b; }
-  .diagram svg { max-width:100%; height:auto; display:block; margin:0 auto; }
+  /* D2 emits a nested <svg> whose OUTER element has a viewBox but no width/height,
+     so it defaults to ~300px and never scales up. Target the outer svg and make it
+     fill the card (that's the "diagrams full-width" bar); max-height caps tall/portrait
+     ones so a vertical flow doesn't run off the slide. */
+  .diagram > svg { width:100%; height:auto; max-height:78vh; display:block; margin:0 auto; }
   .diagram foreignObject div, .diagram span { color:#1e293b; }   /* safety if an engine emits uncoloured labels */
   .present-btn { position:fixed; top:1rem; right:1rem; z-index:10; cursor:pointer; border:1px solid var(--line);
     background:var(--accent); color:#fff; font:600 .85rem Inter,sans-serif; padding:.5rem .9rem; border-radius:10px; }

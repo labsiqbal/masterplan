@@ -27,6 +27,14 @@ Only proceed when the user confirms which candidates are actually the relevant c
 
 For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes PRD §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder.
 
+**Also capture the category's UX conventions — the layer above the universal baseline.** `references/ui-baseline.md` is the floor every app shares; the deep-dive is where you learn what *this industry's* users already expect on top of it, so the build feels native to its category rather than generically correct. For the confirmed candidates note:
+
+- **Table-stakes patterns** every serious product in the category has (e.g. fintech → transaction confirmations, audit trail, clear balances; SaaS dashboard → filters, saved views, bulk actions; consumer/social → onboarding coach, rich empty states; commerce → cart/checkout conventions, trust signals). If the best products all do it, absent it reads as broken.
+- **Expected primary flow** — the order and shape users of this category are trained to expect (deviating is allowed, but must be a deliberate §20 choice, not an accident).
+- **Density & tone conventions** — data-dense/pro vs airy/consumer; where the category sits sets the design register.
+
+This feeds **PRD §15 (design direction)** as concrete, sourced convention — "products X and Y in this space all do ⟨pattern⟩" — not opinion, and complements the universal `ui-baseline.md`. Record it in the `references/` notes so §15 and §6 can cite it.
+
 ## Stage 4 — The verdict
 
 Decide honestly:
