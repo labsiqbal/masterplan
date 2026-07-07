@@ -22,8 +22,12 @@ You are building this project end-to-end. Everything you need is in this folder.
 
 6. **Build order.** Follow PRD section 18 in sequence. The final milestone is always the full QA pass: every acceptance criterion in PRD section 4, verified with evidence.
 
+7. **Design-stack rule.** If this project has a UI, engage the engine's design skills **before writing any frontend code**: `impeccable` (or the platform's frontend-craft equivalent) for the static craft — layout, typography, color, register — plus `motion-library` for the motion layer. They compose; using only one is half a build. If the engine lacks these skills, carry the discipline manually: build to PRD section 15 (design direction, mood, look references, must-not-look-like) and never ship default component-library styling. A UI that works and passes the interaction floor but ignores section 15 is not done.
+
+8. **Interaction baseline rule.** If this project has a UI, `references/ui-baseline.md` is the non-negotiable floor — button/focus/disabled/loading states, loading/empty/error/populated data states, form feedback, keyboard operability, responsive, motion. It is not a suggestion and not optional polish: a surface that skips it is not done, no matter that it "works." Build to it as you go rather than bolting it on at the end, and satisfy its verification checklist in the final QA pass. Deliberate exceptions must already be listed in PRD section 20; anything not listed there is required.
+
 ## Definition of done
 
-All milestones in `STATUS.md` checked with evidence, including the final QA pass. Nothing else counts as done.
+All milestones in `STATUS.md` checked with evidence, including the final QA pass. For any UI project, that pass includes the `references/ui-baseline.md` verification walked and evidenced (states driven, not screenshotted). Nothing else counts as done.
 
 Begin.

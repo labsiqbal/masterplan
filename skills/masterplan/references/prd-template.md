@@ -72,7 +72,7 @@ Inventory of every page/screen with its components — the executing agent build
 | Home | `/` | Hero, feature grid, CTA, footer | Public |
 | Dashboard | `/app` | Nav, item list, create button, empty state | Auth required |
 
-Include empty, loading, and error states for pages that need them.
+**Interaction baseline applies to every screen here.** The default states each page and control must handle — loading / empty / error / populated, and every interactive element's hover / focus / disabled / loading — are the standing standard in `references/ui-baseline.md`, copied into this package. Do **not** restate it per page; this section only records **additions or deliberate exceptions** for a specific screen (e.g. "this table also has a bulk-select toolbar state"). For a headless API/library/CLI project with no UI, write "No UI — interaction baseline N/A" and skip it.
 
 ## 7. Data model **[diagram]**
 
@@ -213,6 +213,9 @@ Prevents functionally-correct-but-generic output:
 - **Mood:** 3–5 words ("warm, editorial, unhurried").
 - **Look references:** 2–3 existing products whose visual quality is the bar.
 - **Must NOT look like:** ⟨the failure mode — e.g. "a default component-library dashboard with stock gradients"⟩.
+- **Industry UX conventions (from phase-2 research):** the table-stakes patterns this product's *category* expects, cited from the deep-dive — "products X and Y in this space all do ⟨pattern⟩, so we adopt it" (e.g. fintech → transaction confirmations + audit trail; SaaS dashboard → filters/saved views/bulk actions; consumer → onboarding coach + rich empty states). List which the build adopts and any it deliberately drops (→ §20). This is the layer *above* the universal `references/ui-baseline.md` floor — it makes the product feel native to its industry, not just generically correct.
+
+This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory.
 
 ## 16. Content & seed data
 
@@ -250,7 +253,7 @@ m3 -> m4: { style.animated: true }
 1. **M1 — Scaffold:** repo, stack, CI-less local run works.
 2. **M2 — Data layer:** schema migrated, seed data loads.
 3. **M⟨n⟩ — …**
-4. **M⟨last⟩ — Full QA pass:** every acceptance criterion in §4 verified with evidence.
+4. **M⟨last⟩ — Full QA pass:** every acceptance criterion in §4 verified with evidence, **and** the interaction baseline in `references/ui-baseline.md` walked and confirmed on the primary flows (its own verification checklist) — for any project with a UI.
 
 ## 19. Non-goals
 

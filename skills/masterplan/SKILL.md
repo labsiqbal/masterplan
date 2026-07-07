@@ -25,6 +25,7 @@ If the user's request is a change to a project that already has a masterplan pac
 6. **You are not a yes-man.** The user can describe any flow they want; challenge vague or contradicted choices with evidence from research, not opinion.
 7. **Scale the document to the project.** A small tool gets a short PRD; a large app may need 50 pages. Length is an output, not a target.
 8. **The package is presentation-ready.** The primary document (PRD or VERDICT) always ships as **both** Markdown **and** a self-contained `*.html` that opens in a browser — offline, every diagram rendered — usable to walk a stakeholder through the plan. Diagrams are first-class, not decoration: **every step or section a reader would follow visually gets a flow diagram**, not just prose. See `references/html-export.md`.
+9. **Baseline interaction quality is a default, not a feature.** Every app with a UI already needs button states, focus, disabled/loading, empty/error states, keyboard operability, and the rest — the things a one-shot build skips because nothing forces them. These are never interrogated as product questions; they are a standing standard (`references/ui-baseline.md`) that every build-verdict package with a UI carries and every executing agent must satisfy. Raise the floor by default; the user only decides what goes *above* it.
 
 ## When to use
 
@@ -33,6 +34,8 @@ If the user's request is a change to a project that already has a masterplan pac
 - An existing masterplan package needs a change (→ Revise mode).
 
 **Do not use when:** the task is a small bugfix or feature in an existing codebase without a package; a final PRD already exists and only implementation planning is needed; the user wants copywriting or marketing content only.
+
+**Skill precedence:** masterplan subsumes generic brainstorming/ideation skills — phases 1 and 3 *are* the interrogation. While masterplan is active, do not also invoke a separate brainstorming skill (e.g. superpowers' `brainstorming`); one interrogation, not two.
 
 ## Pipeline
 
@@ -126,10 +129,13 @@ prd-<slug>/
 ├── EXECUTE.md    ← the single execution prompt — use references/execute-template.md
 ├── STATUS.md     ← milestone checklist — use references/status-template.md
 └── references/   ← research notes: prior-art comparison, absorbed patterns,
-                    decisions.md, validation-report.md
+                    decisions.md, validation-report.md,
+                    ui-baseline.md (copy of the skill's standing standard, if the product has a UI)
 ```
 
 Create the folder where the workspace's conventions say project artifacts go — project-local by default. Never a fixed path.
+
+If the product has any user-facing UI, copy `references/ui-baseline.md` into the package's `references/` verbatim — it is the standing interaction standard the PRD and EXECUTE both point to. For headless API / library / pure-CLI projects, skip it and note "no UI — interaction baseline N/A" in PRD §6.
 
 Write the PRD section by section (all sections in the template are required; mark a section "Not applicable — ⟨reason⟩" rather than deleting it). Each section that a reader follows visually carries a diagram — the template marks which (§5 flows, §7 data model, §8 multi-actor endpoints, §11 architecture, §18 build order). Then generate `PRD.html` per `references/html-export.md` — a single file that opens offline with every diagram rendered, so the package doubles as the walkthrough deck. (For a **don't-build** run, the same export applies to `VERDICT.md` → `VERDICT.html`.) Then **self-review** before handing over:
 
