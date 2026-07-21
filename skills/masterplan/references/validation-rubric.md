@@ -1,6 +1,6 @@
 # Validation Rubric (red team)
 
-Run before writing the PRD (phase 5). A **fresh agent with no conversation context** reviews the decision set. Send the decision summary below — **never the conversation transcript**; a validator that reads the conversation inherits its bias and its sunk-cost affection for the decisions.
+Run before writing the masterplan (phase 5). A **fresh agent with no conversation context** reviews the decision set. Send the decision summary below — **never the conversation transcript**; a validator that reads the conversation inherits its bias and its sunk-cost affection for the decisions.
 
 ## Validator prompt template
 
@@ -10,7 +10,7 @@ Fill the ⟨blanks⟩ and dispatch:
 >
 > DECISION SET:
 > - Pitch: ⟨confirmed pitch paragraph⟩
-> - Prior-art verdict: ⟨verdict + the one difference⟩
+> - Absorption map: ⟨absorption level (fork & adapt / assemble / differentiate / fresh) + the one difference⟩
 > - Features & acceptance criteria: ⟨list⟩
 > - User flows: ⟨summary or diagrams⟩
 > - Business: ⟨audience, budget/month, revenue model, fate⟩
@@ -41,14 +41,14 @@ One line per finding, grouped by severity:
 
 ## Disposition (done by the main agent, after the report)
 
-- **🔴 Blockers** → return to the owning phase (missing aspect → phase 3 or 4; broken feasibility → phase 4; contradiction → wherever it was decided), fix, and update `decisions.md`. **GATE B: the PRD may not be written while any blocker is open.**
+- **🔴 Blockers** → return to the owning phase (missing aspect → phase 3 or 4; broken feasibility → phase 4; contradiction → wherever it was decided), fix, and update `decisions.md`. **GATE B: the masterplan may not be written while any blocker is open.**
 - **🟡 Improvements** → decide with the user (or apply the "you decide" rule).
-- **Everything rejected** — any level — is recorded in PRD section 20 (Considered and rejected) with the reason, so the executing agent doesn't "fix" a deliberate choice.
+- **Everything rejected** — any level — is recorded in masterplan section 20 (Considered and rejected) with the reason, so the executing agent doesn't "fix" a deliberate choice.
 - Save the full report to the package's `references/validation-report.md`.
 
 ## Scaled-down variant (revise mode)
 
-For a revision, the validator receives only: the change request, the impact analysis (affected sections, invalidated milestones), and the decisions the change touches. Same axes, same format. Trigger it when the change touches the data model, security, external APIs, or more than two PRD sections; skip it for smaller deltas.
+For a revision, the validator receives only: the change request, the impact analysis (affected sections, invalidated milestones), and the decisions the change touches. Same axes, same format. Trigger it when the change touches the data model, security, external APIs, or more than two masterplan sections; skip it for smaller deltas.
 
 ## Fallback: no subagent support
 

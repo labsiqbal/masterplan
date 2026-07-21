@@ -2,14 +2,14 @@
 
 The defaults every app with a UI already needs — and that one-shot builds silently skip because nothing forces them. These are **not features to interrogate the user about and not per-project decisions**: they are the floor. A "functionally correct" build that ships buttons with no hover/disabled/loading state, tables that go blank while loading, or forms that fail with a red border and no message is **not done** — it just looks done.
 
-**Scope:** applies to any project with a user-facing UI (web, mobile, desktop, TUI). **Not applicable to** headless API / library / pure-CLI projects — mark it so in the PRD and move on.
+**Scope:** applies to any project with a user-facing UI (web, mobile, desktop, TUI). **Not applicable to** headless API / library / pure-CLI projects — mark it so in the masterplan and move on.
 
 **How this is used**
 - masterplan copies this file into the build package at `references/ui-baseline.md`, so the package stays self-contained.
-- PRD §6 (pages) and §15 (design) point here as the mandatory interaction standard; the PRD only records **additions or deliberate exceptions**, never a restatement.
+- masterplan §6 (pages) and §15 (design) point here as the mandatory interaction standard; the masterplan only records **additions or deliberate exceptions**, never a restatement.
 - EXECUTE.md's definition of done requires this baseline satisfied on every interactive surface; the final QA milestone verifies it.
 
-**How to read it:** each item is an acceptance criterion the executing agent must be able to *demonstrate*, not a suggestion. Scale sensibly — a two-page internal tool doesn't need a design system, but it still needs its one button to show it's disabled. When a project genuinely diverges from an item, that goes in PRD §20 (Considered and rejected) with a reason, not a silent skip.
+**How to read it:** each item is an acceptance criterion the executing agent must be able to *demonstrate*, not a suggestion. Scale sensibly — a two-page internal tool doesn't need a design system, but it still needs its one button to show it's disabled. When a project genuinely diverges from an item, that goes in masterplan §20 (Considered and rejected) with a reason, not a silent skip.
 
 ---
 
@@ -99,6 +99,6 @@ Before the build is done, the executing agent walks a real interactive surface a
 2. Trigger its **loading, empty, error, and success** states and confirm each renders (throttle/kill the network to force them).
 3. Confirm every button shows **hover, focus, disabled, and in-flight** states and can't double-submit.
 4. Resize from mobile to desktop — no horizontal scroll, no layout break, no shift on load.
-5. Note any deliberate exceptions in PRD §20.
+5. Note any deliberate exceptions in masterplan §20.
 
 "Looks right in one screenshot" is not evidence. Driving the states is.
