@@ -1,8 +1,17 @@
-# PRD.md Template
+# masterplan.md Template
 
-Copy this structure into the package's `PRD.md` and fill every section. **Every section resolves to a DECISION with a short rationale. No option lists. No TBD.** If a section genuinely does not apply, keep the heading and write "Not applicable — ⟨reason⟩" so the executing agent knows it was considered, not forgotten. Scale depth to the project: a small tool gets short sections, a large app gets long ones.
+Copy this structure into the package's `masterplan.md` and fill every section. **Every section resolves to a DECISION with a short rationale. No option lists. No TBD.** If a section genuinely does not apply, keep the heading and write "Not applicable — ⟨reason⟩" so the executing agent knows it was considered, not forgotten. Scale depth to the project: a small tool gets short sections, a large app gets long ones.
 
-**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a **D2** diagram, not just prose — this file exports to `PRD.html` with every diagram rendered and its arrows animated (see `references/html-export.md`). The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows, §7 data model (`sql_table`), §8 multi-actor/async endpoints (`sequence_diagram`), §11 architecture (containers), §18 build order. Apply the **colour-semantics classes** from `references/html-export.md` (entry = indigo, process = slate, datastore = amber, external = teal) and `style.animated: true` on connections. Keep diagrams valid D2 — one that fails to compile renders blank in the deck; mind the reserved-keyword gotcha (`"label"`, quoted braces) noted in the export playbook.
+**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a **Mermaid** diagram, not just prose - lavish renders them and turns them into editable Excalidraw whiteboards during review, and the sources render natively on GitHub and most viewers (see `references/lavish-export.md`). The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows (`flowchart`), §7 data model (`erDiagram`), §8 multi-actor/async endpoints (`sequenceDiagram`), §11 architecture (`flowchart` with `subgraph`), §18 build order (`flowchart`). Apply the **colour-semantics classes** in every flowchart via `classDef` (entry = indigo, process = slate, datastore = amber, external = teal) so the same kind of node always reads the same; `erDiagram` and `sequenceDiagram` take no classes - their structure carries the semantics. Keep diagrams valid Mermaid - one that fails to parse renders blank in review: quote any label containing punctuation Mermaid parses (`m1["M1 (walking skeleton)"]`, `done(["Success: published"])`), and never name a node `end` (reserved word).
+
+The `classDef` block every flowchart starts with:
+
+```
+classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
+classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
+classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
+classDef ext fill:#ccfbf1,stroke:#14b8a6,color:#0f766e
+```
 
 ---
 
@@ -38,29 +47,21 @@ One block per feature. A feature without acceptance criteria does not exist.
 
 ## 5. User flows **[diagram]**
 
-One D2 diagram per primary flow, plus a sentence naming its start and success end-state.
+One Mermaid `flowchart` per primary flow, plus a sentence naming its start and success end-state.
 
-```d2
-direction: down
-classes: {
-  entry: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
-  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
-  store: { style: { fill: "#fef3c7"; stroke: "#f59e0b"; font-color: "#92400e" } }
-}
-land: Visitor lands on home { shape: oval; class: entry }
-q: Has account? { shape: diamond; class: entry }
-signup: Sign up { class: proc }
-dash: Dashboard { class: proc }
-create: Creates first item { class: proc }
-save: Save item { shape: cylinder; class: store }
-done: Success: item published { shape: oval; class: entry }
-land -> q: { style.animated: true }
-q -> signup: no { style.animated: true }
-q -> dash: yes { style.animated: true }
-signup -> dash: { style.animated: true }
-dash -> create: { style.animated: true }
-create -> save: { style.animated: true }
-save -> done: { style.animated: true }
+```mermaid
+flowchart TD
+  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
+  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
+  land([Visitor lands on home]):::entry --> q{Has account?}
+  q -- no --> signup[Sign up]:::proc
+  q -- yes --> dash[Dashboard]:::proc
+  signup --> dash
+  dash --> create[Creates first item]:::proc
+  create --> save[(Save item)]:::store
+  save --> done(["Success: item published"]):::entry
+  class q entry
 ```
 
 ## 6. Pages & screens
@@ -76,26 +77,24 @@ Inventory of every page/screen with its components — the executing agent build
 
 ## 7. Data model **[diagram]**
 
-The actual schema, not "needs a database". Lead with a D2 `sql_table` diagram so relations read at a glance in the deck, then the exact schema below it:
+The actual schema, not "needs a database". Lead with a Mermaid `erDiagram` so relations read at a glance in the deck, then the exact schema below it:
 
-```d2
-direction: right
-users: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  email: text
-}
-items: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  user_id: uuid { constraint: foreign_key }
-  title: text
-  status: text
-}
-users.id -> items.user_id: owns { style.animated: true }
+```mermaid
+erDiagram
+  users ||--o{ items : owns
+  users {
+    uuid id PK
+    text email
+  }
+  items {
+    uuid id PK
+    uuid user_id FK
+    text title
+    text status
+  }
 ```
 
-Every table/collection, every field, every relation (quote any column whose name is a D2 keyword, e.g. `"label": text`):
+Every table/collection, every field, every relation (`erDiagram` attributes are `type name` with an optional `PK` / `FK` marker — keep identifiers plain):
 
 ```sql
 CREATE TABLE users (
@@ -117,16 +116,16 @@ If the product has no persistent data, state that and why.
 
 ## 8. API contracts
 
-Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add a D2 `sequence_diagram` showing who calls whom in what order — these are the flows a walkthrough audience most needs to see:
+Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add a Mermaid `sequenceDiagram` showing who calls whom in what order — these are the flows a walkthrough audience most needs to see:
 
-```d2
-shape: sequence_diagram
-b: Browser
-a: API
-d: Database
-b -> a: POST /api/items { style.animated: true }
-a -> d: insert item { style.animated: true }
-a -> b: "201 {id}"
+```mermaid
+sequenceDiagram
+  participant B as Browser
+  participant A as API
+  participant D as Database
+  B->>A: POST /api/items
+  A->>D: insert item
+  A-->>B: 201 {id}
 ```
 
 The endpoint list — route, payload, response, error shape:
@@ -162,28 +161,25 @@ The chosen stack — one choice per layer, with rationale tied to sections 3 and
 
 ## 11. Architecture **[diagram]**
 
-How the pieces connect — a short prose description plus a diagram. Use D2 containers to show what runs where:
+How the pieces connect — a short prose description plus a diagram. Use a `flowchart` with `subgraph` containers to show what runs where:
 
-```d2
-direction: right
-classes: {
-  entry: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
-  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
-  store: { style: { fill: "#fef3c7"; stroke: "#f59e0b"; font-color: "#92400e" } }
-  ext:   { style: { fill: "#ccfbf1"; stroke: "#14b8a6"; font-color: "#0f766e" } }
-}
-browser: Browser { shape: oval; class: entry }
-host: Hosting platform {
-  style: { fill: "#f8fafc"; stroke: "#cbd5e1" }
-  fe: Frontend { class: proc }
-  api: Backend API { class: proc }
-}
-db: Database { shape: cylinder; class: store }
-ext: External services { class: ext }
-browser -> host.fe: { style.animated: true }
-host.fe -> host.api: { style.animated: true }
-host.api -> db: { style.animated: true }
-host.api -> ext: { style.animated: true }
+```mermaid
+flowchart LR
+  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
+  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
+  classDef ext fill:#ccfbf1,stroke:#14b8a6,color:#0f766e
+  browser([Browser]):::entry
+  subgraph host[Hosting platform]
+    fe[Frontend]:::proc
+    api[Backend API]:::proc
+  end
+  db[(Database)]:::store
+  services[External services]:::ext
+  browser --> fe
+  fe --> api
+  api --> db
+  api --> services
 ```
 
 Name the boundaries: what runs where, what talks to what, what is stateless.
@@ -215,7 +211,7 @@ Prevents functionally-correct-but-generic output:
 - **Must NOT look like:** ⟨the failure mode — e.g. "a default component-library dashboard with stock gradients"⟩.
 - **Industry UX conventions (from phase-2 research):** the table-stakes patterns this product's *category* expects, cited from the deep-dive — "products X and Y in this space all do ⟨pattern⟩, so we adopt it" (e.g. fintech → transaction confirmations + audit trail; SaaS dashboard → filters/saved views/bulk actions; consumer → onboarding coach + rich empty states). List which the build adopts and any it deliberately drops (→ §20). This is the layer *above* the universal `references/ui-baseline.md` floor — it makes the product feel native to its industry, not just generically correct.
 
-This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory.
+This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory. It also drives the look of the lavish-exported artifact (`references/lavish-export.md`), so the deck previews the product faithfully.
 
 ## 16. Content & seed data
 
@@ -232,22 +228,16 @@ Everything the owner must provide, and when the build needs it:
 
 ## 18. Build order **[diagram]**
 
-The sequence STATUS.md mirrors — numbered milestones, each independently verifiable, ending with the full QA pass. Lead with a D2 diagram of milestone dependencies (what unblocks what) so the plan is legible in one glance during the walkthrough:
+The sequence STATUS.md mirrors — numbered milestones, each independently verifiable, ending with the full QA pass. Lead with a Mermaid `flowchart` of milestone dependencies (what unblocks what) so the plan is legible in one glance during the walkthrough:
 
-```d2
-direction: right
-classes: {
-  entry: { style: { fill: "#eef2ff"; stroke: "#6366f1"; font-color: "#3730a3" } }
-  proc:  { style: { fill: "#f1f5f9"; stroke: "#64748b"; font-color: "#0f172a" } }
-  store: { style: { fill: "#fef3c7"; stroke: "#f59e0b"; font-color: "#92400e" } }
-}
-m1: M1 Scaffold { class: proc }
-m2: M2 Data layer { class: store }
-m3: M3 Features { class: proc }
-m4: M4 Full QA pass { class: entry }
-m1 -> m2: { style.animated: true }
-m2 -> m3: { style.animated: true }
-m3 -> m4: { style.animated: true }
+```mermaid
+flowchart LR
+  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
+  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
+  m1[M1 Scaffold]:::proc --> m2[M2 Data layer]:::store
+  m2 --> m3[M3 Features]:::proc
+  m3 --> m4[M4 Full QA pass]:::entry
 ```
 
 1. **M1 — Scaffold:** repo, stack, CI-less local run works.

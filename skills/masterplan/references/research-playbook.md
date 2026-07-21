@@ -25,7 +25,7 @@ Only proceed when the user confirms which candidates are actually the relevant c
 
 ## Stage 3 — Deep-dive (only after confirmation)
 
-For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes PRD §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder.
+For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes masterplan §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder.
 
 **Also capture the category's UX conventions — the layer above the universal baseline.** `references/ui-baseline.md` is the floor every app shares; the deep-dive is where you learn what *this industry's* users already expect on top of it, so the build feels native to its category rather than generically correct. For the confirmed candidates note:
 
@@ -33,7 +33,7 @@ For the confirmed candidates: user flows and page structures (what screens exist
 - **Expected primary flow** — the order and shape users of this category are trained to expect (deviating is allowed, but must be a deliberate §20 choice, not an accident).
 - **Density & tone conventions** — data-dense/pro vs airy/consumer; where the category sits sets the design register.
 
-This feeds **PRD §15 (design direction)** as concrete, sourced convention — "products X and Y in this space all do ⟨pattern⟩" — not opinion, and complements the universal `ui-baseline.md`. Record it in the `references/` notes so §15 and §6 can cite it.
+This feeds **masterplan §15 (design direction)** as concrete, sourced convention — "products X and Y in this space all do ⟨pattern⟩" — not opinion, and complements the universal `ui-baseline.md`. Record it in the `references/` notes so §15 and §6 can cite it.
 
 ## Stage 4 — The verdict
 
@@ -43,11 +43,11 @@ Decide honestly:
 Does a deployable product already cover the pitch (including "the one difference")?
 ├─ YES → DON'T BUILD.
 │        The package becomes a setup/adaptation document for that product:
-│        PRD sections re-aim at configuring/deploying/extending it, the build
+│        masterplan sections re-aim at configuring/deploying/extending it, the build
 │        order becomes a setup order. Say it plainly: "deploy X, save months."
 └─ NO → Is there meaningful prior art?
     ├─ YES → BUILD WITH DIFFERENTIATION.
-    │        PRD §2 must state THE one difference in a single sentence.
+    │        masterplan §2 must state THE one difference in a single sentence.
     │        If you cannot write that sentence, the verdict is "don't build."
     └─ NO → BUILD FRESH.
              Rare. Components still get anchored to references where possible —
@@ -67,11 +67,11 @@ Checked per reference **before** it enters the map. When unsure, learn the patte
 | Strong copyleft | GPL, AGPL | Do **not** absorb code into a closed-source product. Pattern-learning only. AGPL binds even network-served use. |
 | Proprietary / no license | closed products, unlicensed repos | Pattern only. An unlicensed public repo is NOT free to copy. |
 
-Cross-check against the product's fate (PRD §21): an open-source (compatible-licensed) product may absorb more; a commercial closed product is strictest.
+Cross-check against the product's fate (masterplan §21): an open-source (compatible-licensed) product may absorb more; a commercial closed product is strictest.
 
 ## Reference map format
 
-Feeds PRD §14 directly:
+Feeds masterplan §14 directly:
 
 | Component | Reference (repo/product) | License | Absorb |
 |---|---|---|---|

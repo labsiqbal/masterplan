@@ -2,7 +2,9 @@
 
 > *Every decision made before the first line of code.*
 
-An agent skill that turns a product idea — a one-sentence thought or a long messy chat — into a **PRD package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted.
+An agent skill that turns a product idea — a one-sentence thought or a long messy chat — into a **masterplan package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted.
+
+The core is a **portable text pipeline** — plain Markdown, diagrams as Mermaid source — that runs on any agent runtime. Where [lavish-axi](https://github.com/kunchenguid/lavish-axi) is available, it adds the **visual layer**: interactive interrogation and gate reviews, diagrams as editable Excalidraw whiteboards, and a portable HTML export of the finished package.
 
 ## How it works
 
@@ -27,27 +29,25 @@ A six-phase pipeline with three review gates:
 ## The output package
 
 ```
-prd-<slug>/
-├── PRD.md        ← every decision made: schema, API contracts, acceptance
-│                   criteria, design direction, build order
-├── EXECUTE.md    ← the single prompt handed to the executing agent
-├── STATUS.md     ← milestone checklist the executor updates with evidence
-└── references/   ← research notes, decisions.md, validation-report.md
+masterplan-<slug>/
+├── masterplan.md    ← every decision made: schema, API contracts, acceptance
+│                      criteria, design direction, build order
+├── masterplan.html  ← portable walkthrough deck, exported by lavish-axi
+│                      (only where lavish is available)
+├── EXECUTE.md       ← the single prompt handed to the executing agent
+├── STATUS.md        ← milestone checklist the executor updates with evidence
+└── references/      ← research notes, decisions.md, validation-report.md
 ```
 
-Hand `EXECUTE.md` to any capable coding agent and the build runs end-to-end. If a run stops midway, the next session resumes from `STATUS.md`.
+Hand `EXECUTE.md` to any capable coding agent and the build runs end-to-end. If a run stops midway, the next session resumes from `STATUS.md`. The text files are the source of truth; the HTML deck is a render of them.
 
 ## Revise mode
 
-When a project that already has a package needs a change, the skill runs only the affected phases, shows which sections and milestones are impacted, bumps the version, and appends to the changelog — so the PRD stays current as the product changes.
-
-## Worked example
-
-A complete package produced by the skill — the recorded decisions, the red-team validation report, and the final PRD / EXECUTE / STATUS — is in [`examples/prd-ai-tools-affiliate/`](examples/prd-ai-tools-affiliate/).
+When a project that already has a package needs a change, the skill runs only the affected phases, shows which sections and milestones are impacted, bumps the version, and appends to the changelog — so the masterplan stays current as the product changes.
 
 ## Install
 
-Copy `skills/masterplan/` into your agent's skill directory. The skill is plain English with no engine-specific dependencies.
+Copy `skills/masterplan/` into your agent's skill directory. The core skill is plain English with no engine-specific dependencies — the text pipeline completes on any runtime. The visual layer (interactive review, editable diagrams, HTML export) uses `lavish-axi` where installed; without it, diagrams remain Mermaid source (rendered natively by GitHub and most Markdown viewers) and rich HTML export is unavailable.
 
 | System | Location |
 |---|---|
@@ -66,16 +66,20 @@ masterplan/
     └── masterplan/
         ├── SKILL.md             (the pipeline: phases, gates, rules, revise mode)
         └── references/
-            ├── prd-template.md          (the full PRD structure)
+            ├── masterplan-template.md   (the full masterplan.md structure)
             ├── execute-template.md      (the single execution prompt)
             ├── status-template.md       (milestone checklist)
-            ├── verdict-template.md      (the don't-build investigation record)
+            ├── verdict-template.md      (the false-premise investigation record)
             ├── question-bank.md         (interrogation menu)
             ├── validation-rubric.md     (red-team mandate + report format)
             ├── research-playbook.md     (staged prior-art method + license table)
-            └── revise-playbook.md       (change → impact → delta)
+            ├── revise-playbook.md       (change → impact → delta)
+            ├── ui-baseline.md           (standing UI interaction standard)
+            └── lavish-export.md         (review + export via lavish-axi)
 ```
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+HTML export & interactive review powered by [lavish-axi](https://github.com/kunchenguid/lavish-axi) (MIT).

@@ -1,12 +1,12 @@
 # STATUS.md Template
 
-Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from PRD section 18. masterplan creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
+Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from masterplan section 18. masterplan creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
 
 ---
 
 # Status: ⟨project name⟩
 
-**PRD version:** v1.0
+**masterplan version:** v1.0
 **Started:** ⟨YYYY-MM-DD⟩
 **Last updated:** ⟨YYYY-MM-DD⟩ by ⟨agent/owner⟩
 
@@ -17,7 +17,7 @@ Copy everything below the `---` into the package's `STATUS.md`, pre-filled with 
 
 ## Milestones
 
-- [ ] **M1 — Scaffold** — ⟨what M1 covers, from PRD §18⟩
+- [ ] **M1 — Scaffold** — ⟨what M1 covers, from masterplan §18⟩
   - Note: —
   - Evidence: —
 - [ ] **M2 — Data layer** — ⟨…⟩
@@ -26,7 +26,7 @@ Copy everything below the `---` into the package's `STATUS.md`, pre-filled with 
 - [ ] **M⟨n⟩ — …**
   - Note: —
   - Evidence: —
-- [ ] **M⟨last⟩ — Full QA pass** — run every acceptance criterion from the PRD end-to-end and record evidence.
+- [ ] **M⟨last⟩ — Full QA pass** — run every acceptance criterion from the masterplan end-to-end and record evidence.
   - Note: —
   - Evidence: —
 

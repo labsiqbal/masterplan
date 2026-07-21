@@ -1,6 +1,6 @@
 ---
 name: masterplan
-description: Use when turning a product idea — from a one-sentence thought to a long messy chat — into a complete, execution-ready PRD package that a coding agent can build end-to-end from a single prompt. Covers idea clarification, prior-art research with an honest build/don't-build verdict, product interrogation, technical decisions with per-component reference maps, adversarial validation, and revision of existing packages. Also use when the user asks to add features or change scope on a project that already has a masterplan package (revise mode).
+description: Use when turning a product idea — from a one-sentence thought to a long messy chat — into a complete, execution-ready masterplan package that a coding agent can build end-to-end from a single prompt. Covers idea clarification, prior-art research with an honest build/don't-build verdict, product interrogation, technical decisions with per-component reference maps, adversarial validation, and revision of existing packages. Also use when the user asks to add features or change scope on a project that already has a masterplan package (revise mode).
 version: 1.0.0
 license: MIT
 metadata:
@@ -11,20 +11,20 @@ metadata:
 
 > **Every decision made before the first line of code.**
 
-Turn a raw product idea into a **PRD package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template — you are running an investigation that ends in a document where every question is already answered.
+Turn a raw product idea into a **masterplan package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template — you are running an investigation that ends in a document where every question is already answered.
 
 If the user's request is a change to a project that already has a masterplan package, skip to **Revise mode** at the bottom.
 
 ## Core principles
 
-1. **Decisions, not discussion.** Every PRD section resolves to one chosen answer with a short rationale. No option lists. No "TBD".
+1. **Decisions, not discussion.** Every masterplan section resolves to one chosen answer with a short rationale. No option lists. No "TBD".
 2. **Honest consultant, not a PRD machine.** If research shows the idea already exists as a deployable product, say "don't build this — deploy X" and produce a setup/adaptation document instead.
 3. **Nothing from scratch without a reason (the chimera principle).** Products are assembled from proven parts. Anchor every major component to a reference implementation — observe, imitate, modify — with licenses checked.
 4. **Cheap before expensive — gate the spend, not the tool.** Tools and research are allowed in *any* phase once there is a clear purpose for the spend. Reading an existing target (codebase, product, files) read-only to ground a fuzzy idea is cheap and encouraged early. What's held back is *expensive or online* research spent on a still-shallow target that may change tomorrow: clarify the target before prior-art/web research, quick-scan before a deep-dive, validate before writing the document. The rule is never "don't research" — it's "don't research *deep/online* while the goal is still shallow."
 5. **The user answers product questions; you make technical decisions.** Ask about audience, features, budget, and the product's fate. Decide stack, database, architecture, and security yourself, and write down why.
 6. **You are not a yes-man.** The user can describe any flow they want; challenge vague or contradicted choices with evidence from research, not opinion.
-7. **Scale the document to the project.** A small tool gets a short PRD; a large app may need 50 pages. Length is an output, not a target.
-8. **The package is presentation-ready.** The primary document (PRD or VERDICT) always ships as **both** Markdown **and** a self-contained `*.html` that opens in a browser — offline, every diagram rendered — usable to walk a stakeholder through the plan. Diagrams are first-class, not decoration: **every step or section a reader would follow visually gets a flow diagram**, not just prose. See `references/html-export.md`.
+7. **Scale the document to the project.** A small tool gets a short masterplan; a large app may need 50 pages. Length is an output, not a target.
+8. **Portable text core, lavish visual layer.** The text package (`masterplan.md`, `EXECUTE.md`, `STATUS.md`, `decisions.md`) is the source of truth and runs on any agent runtime - plain Markdown, diagrams as Mermaid source (which renders natively on GitHub and most viewers). Diagrams are first-class, not decoration: **every step or section a reader would follow visually gets a flow diagram**, not just prose. Where **lavish-axi** is available it owns the visual + interactive layer: interrogation and gate reviews happen on rich artifacts, diagrams become editable Excalidraw whiteboards, and the final package exports to portable HTML (`lavish-axi export`) or a shareable link (`lavish-axi share`). Without lavish, the pipeline still completes to the full text package - rich HTML export is simply unavailable there. See `references/lavish-export.md`.
 9. **Baseline interaction quality is a default, not a feature.** Every app with a UI already needs button states, focus, disabled/loading, empty/error states, keyboard operability, and the rest — the things a one-shot build skips because nothing forces them. These are never interrogated as product questions; they are a standing standard (`references/ui-baseline.md`) that every build-verdict package with a UI carries and every executing agent must satisfy. Raise the floor by default; the user only decides what goes *above* it.
 
 ## When to use
@@ -93,14 +93,14 @@ The user may describe the flows they want in their own words. Correct with evide
 - **One question per turn.** Each answer steers what gets asked next; answers can eliminate later questions entirely.
 - **Multiple choice preferred** wherever the answer space allows. Use the platform's interactive question UI if available; otherwise numbered options in text.
 - **Mark a recommended option** with a one-line reason.
-- **Always include a "you decide" escape hatch.** Choosing it is not a non-answer: make the decision yourself and record it in the PRD as an agent decision with rationale. Full delegation never stalls the pipeline.
+- **Always include a "you decide" escape hatch.** Choosing it is not a non-answer: make the decision yourself and record it in the masterplan as an agent decision with rationale. Full delegation never stalls the pipeline.
 
 ## Phase 4 — Technical research + reference map
 
 You make every technical decision and verify it against reality:
 
 - **Choose the stack** (never list options), justified against the product's needs, budget, and fate.
-- **Verify external APIs are alive** and check current pricing against the stated budget. A PRD naming a dead API or an unaffordable tier fails at execution time.
+- **Verify external APIs are alive** and check current pricing against the stated budget. A masterplan naming a dead API or an unaffordable tier fails at execution time.
 - **Build the per-component reference map:** anchor each major component to a proven implementation — "video timeline → adapt pattern from repo X (MIT)"; "chat streaming → proven in repo Y." Check licenses so no incompatible code (e.g. GPL into a closed-source product) gets absorbed; see the license table in `references/research-playbook.md`.
 
 ## Phase 5 — Validate (red team)
@@ -109,10 +109,10 @@ Before writing anything, submit the decision set to a **fresh agent with no conv
 
 - Send the **decision summary** — pitch, verdict, feature list, flows, technical decisions with rationale, reference map. **Never send the conversation transcript**; a validator that reads the conversation inherits its bias.
 - The mandate is adversarial: **find what is wrong, not what is good.** Axes: completeness, consistency, feasibility, optimization, risk.
-- The report comes back at three levels: 🔴 **Blocker**, 🟡 **Improvement**, 🟢 **Nice-to-have**. Blockers return to their owning phase and get fixed. Improvements are decided with the user. Rejected suggestions are recorded in the PRD's considered-and-rejected section so the executing agent doesn't "fix" deliberate choices.
-- Save the report to the package's `references/validation-report.md`.
+- The report comes back at three levels: 🔴 **Blocker**, 🟡 **Improvement**, 🟢 **Nice-to-have**. Blockers return to their owning phase and get fixed. Improvements are decided with the user. Rejected suggestions are recorded in the masterplan's considered-and-rejected section so the executing agent doesn't "fix" deliberate choices.
+- Save the report to the package's `references/validation-report.md`. Where lavish is available, present the 🔴🟡🟢 report as a lavish table/comparison so the user reviews and disposes findings on one surface.
 
-**GATE B — Do not write the PRD while blockers remain.**
+**GATE B — Do not write the masterplan while blockers remain.**
 
 Validation runs **by default**. The user may skip it for tiny projects. On platforms without subagent support, run the same rubric yourself in a clean context (a fresh conversation or a deliberate fresh-eyes pass) — weaker, but the gate still exists.
 
@@ -123,28 +123,28 @@ Validation runs **by default**. The user may skip it for tiny projects. On platf
 Produce one folder:
 
 ```
-prd-<slug>/
-├── PRD.md        ← the complete document — use references/prd-template.md
-├── PRD.html      ← self-contained, presentation-ready render of PRD.md, all diagrams rendered — use references/html-export.md
-├── EXECUTE.md    ← the single execution prompt — use references/execute-template.md
-├── STATUS.md     ← milestone checklist — use references/status-template.md
-└── references/   ← research notes: prior-art comparison, absorbed patterns,
-                    decisions.md, validation-report.md,
-                    ui-baseline.md (copy of the skill's standing standard, if the product has a UI)
+masterplan-<slug>/
+├── masterplan.md    ← the complete document — use references/masterplan-template.md
+├── masterplan.html  ← lavish-exported artifact (lavish-axi export) — only where lavish is available
+├── EXECUTE.md       ← the single execution prompt — use references/execute-template.md
+├── STATUS.md        ← milestone checklist — use references/status-template.md
+└── references/      ← research notes: prior-art comparison, absorbed patterns,
+                       decisions.md, validation-report.md,
+                       ui-baseline.md (copy of the skill's standing standard, if the product has a UI)
 ```
 
 Create the folder where the workspace's conventions say project artifacts go — project-local by default. Never a fixed path.
 
-If the product has any user-facing UI, copy `references/ui-baseline.md` into the package's `references/` verbatim — it is the standing interaction standard the PRD and EXECUTE both point to. For headless API / library / pure-CLI projects, skip it and note "no UI — interaction baseline N/A" in PRD §6.
+If the product has any user-facing UI, copy `references/ui-baseline.md` into the package's `references/` verbatim — it is the standing interaction standard the masterplan and EXECUTE both point to. For headless API / library / pure-CLI projects, skip it and note "no UI — interaction baseline N/A" in masterplan §6.
 
-Write the PRD section by section (all sections in the template are required; mark a section "Not applicable — ⟨reason⟩" rather than deleting it). Each section that a reader follows visually carries a diagram — the template marks which (§5 flows, §7 data model, §8 multi-actor endpoints, §11 architecture, §18 build order). Then generate `PRD.html` per `references/html-export.md` — a single file that opens offline with every diagram rendered, so the package doubles as the walkthrough deck. (For a **don't-build** run, the same export applies to `VERDICT.md` → `VERDICT.html`.) Then **self-review** before handing over:
+Write the masterplan section by section (all sections in the template are required; mark a section "Not applicable — ⟨reason⟩" rather than deleting it). Each section that a reader follows visually carries a **Mermaid** diagram — the template marks which (§5 flows, §7 data model, §8 multi-actor endpoints, §11 architecture, §18 build order). Where lavish is available, generate the walkthrough deck via `lavish-axi export` per `references/lavish-export.md` — driven by §15 Design direction so the deck previews the product's own look. (On a **false-premise stop**, the same export applies to `VERDICT.md` → `VERDICT.html`.) Then **self-review** before handing over:
 
 1. **Placeholder scan** — no "TBD", "TODO", or vague requirements anywhere.
 2. **Consistency** — no section contradicts another; the build order covers every feature; every feature has acceptance criteria.
 3. **Ambiguity** — if a requirement can be read two ways, pick one and make it explicit.
-4. **Diagram coverage** — every flow/step a reader would follow visually has a diagram, and `PRD.html` opens offline with all of them rendered (no broken/blank diagram, no CDN dependency).
+4. **Diagram coverage** — every flow/step a reader would follow visually has a diagram, every diagram is valid Mermaid (a parse failure renders blank), and — where lavish exported an artifact — the export shows all of them rendered.
 
-**GATE C — The user reviews the package.** Present it, walk through the load-bearing decisions briefly, and revise until approved.
+**GATE C — The user reviews the package.** Present it, walk through the load-bearing decisions briefly, and revise until approved. Where lavish is available, present the package as a lavish artifact: the user annotates and sketches directly, `lavish-axi poll` collects the feedback, and approval ends in `lavish-axi export` (plus `share` for a link).
 
 ## Generator state — `references/decisions.md`
 
@@ -169,14 +169,16 @@ The pipeline itself must survive interruption, mirroring what it preaches. As ea
 
 On session start with a partial package: read this file, state which phase you are resuming, and continue.
 
-## Revise mode — the PRD stays alive
+## Revise mode — the masterplan stays alive
 
-A PRD that cannot change becomes a lie the first time the product changes. When the user requests a change to a project with an existing package, follow `references/revise-playbook.md`:
+A masterplan that cannot change becomes a lie the first time the product changes. When the user requests a change to a project with an existing package, follow `references/revise-playbook.md`:
 
-1. **Load state** — read PRD.md, STATUS.md, and `references/decisions.md`; understand what is already built.
+1. **Load state** — read masterplan.md, STATUS.md, and `references/decisions.md`; understand what is already built.
 2. **Classify the change** and run **only the affected phases** — a new user-facing feature may need a prior-art check and a few interrogation questions; a stack swap needs phase 4; a copy tweak needs neither.
-3. **Impact analysis** — show the user which PRD sections change and which built milestones are invalidated, before writing anything.
+3. **Impact analysis** — show the user which masterplan sections change and which built milestones are invalidated, before writing anything.
 4. **Validate** — significant changes go through the red-team gate again, scaled down: the validator sees the change and its impact, not the whole package.
 5. **Write the delta** — update affected sections, bump the version, append to the changelog, add new milestones to STATUS.md, and mark invalidated ones `[!] needs rework`. Never silently uncheck history.
 
 Revise mode pairs with EXECUTE.md's change-guard rule: the executor refuses ad-hoc scope changes and points here; revise mode makes the front door cheap. Together they keep the document permanently truthful.
+
+Where lavish is available, run the interactive touchpoints on it: Gate A pitch confirmation and phase-3 interrogation as lavish input artifacts, the phase-2 candidate set as a comparison, phase-4 architecture/data diagrams as editable whiteboards, and the Gate B/C reviews as annotate-and-poll surfaces (`references/lavish-export.md`). Every one of these has a plain-conversation fallback — lavish is the preferred surface, never a dependency.

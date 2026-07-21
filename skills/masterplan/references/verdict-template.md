@@ -1,6 +1,6 @@
 # VERDICT template — the "don't build" outcome
 
-Use this when the honest verdict is **don't build** (either flavour). The package is an *investigation record*, not a spec to execute: no PRD/EXECUTE/STATUS. Save as `VERDICT.md` at the package root, alongside `references/`.
+Use this when the honest verdict is **don't build** (either flavour). The package is an *investigation record*, not a spec to execute: no masterplan/EXECUTE/STATUS. Save as `VERDICT.md` at the package root, alongside `references/`.
 
 Scale it to the finding — a false-premise kill can be one screen; a "deploy X instead" needs enough of the adaptation path to act on. Keep every claim grounded (cite the file/source that proves it, in `references/`).
 
@@ -8,7 +8,7 @@ Scale it to the finding — a false-premise kill can be one screen; a "deploy X 
 
 # ⟨Idea name⟩ — VERDICT: DON'T BUILD ⟨/ (YET)⟩
 
-**Date:** YYYY-MM-DD · **Status:** CLOSED, no PRD. This folder is an *investigation record*, not a spec to execute.
+**Date:** YYYY-MM-DD · **Status:** CLOSED, no masterplan. This folder is an *investigation record*, not a spec to execute.
 
 ## The question
 ⟨What the user wanted, and the belief/premise behind it — in one or two lines.⟩

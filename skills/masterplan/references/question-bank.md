@@ -2,9 +2,9 @@
 
 A **menu, not a script**. Phase 1 uses only what the idea dump leaves unclear; aim for ~12 questions in the phase-3 interrogation. Let every answer eliminate later questions. One question per turn. Multiple choice wherever the answer space allows — mark a recommended option with a one-line reason, and **every question ends with the escape hatch**:
 
-> **You decide** — make the call and record your rationale in the PRD.
+> **You decide** — make the call and record your rationale in the masterplan.
 
-Choosing it is a real answer: decide yourself, write the decision into the PRD as an agent decision with rationale, and move on.
+Choosing it is a real answer: decide yourself, write the decision into the masterplan as an agent decision with rationale, and move on.
 
 Rephrase questions naturally in context — these are patterns, not scripts to read verbatim.
 
@@ -28,25 +28,25 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 ### Features & flows
 9. **Core feature confirmation** — from everything so far: "The core is ⟨X⟩; ⟨Y⟩ and ⟨Z⟩ are secondary. Right, or is the weight elsewhere?"
 10. **Flow check (evidence-based correction)** — when the user's described flow conflicts with phase 2 findings: "You describe ⟨flow⟩; X, Y, Z all do ⟨other flow⟩ because ⟨reason⟩. Deliberate difference / adopt the proven pattern?"
-11. **Launch cut** — "Anything you're explicitly NOT building in v1? Recommended: name at least two — non-goals protect the build from drift." (feeds PRD §19)
+11. **Launch cut** — "Anything you're explicitly NOT building in v1? Recommended: name at least two — non-goals protect the build from drift." (feeds masterplan §19)
 
 ### Business
 12. **Monthly budget** — "Budget per month for hosting + APIs: ~0 (free tiers) / small (~tens) / real (~hundreds+)? Recommended: name a hard number — every technical decision downstream must fit inside it."
 13. **Revenue model** — "Free / one-time purchase / subscription / internal (no revenue)?" *(skip if fate = internal)*
 
 ### Fate
-14. **Product fate** — "Open source / commercial product / internal tool? This decides license, docs, and hardening level." (feeds PRD §21; "internal, just me" eliminates pricing/onboarding/marketing questions)
+14. **Product fate** — "Open source / commercial product / internal tool? This decides license, docs, and hardening level." (feeds masterplan §21; "internal, just me" eliminates pricing/onboarding/marketing questions)
 
 ### Design taste
-15. **Look references** — "Name 2–3 products whose look this should live up to." (feeds PRD §15)
+15. **Look references** — "Name 2–3 products whose look this should live up to." (feeds masterplan §15)
 16. **Register & mood** — "Should it feel like a brand site (expressive, loud) or a product tool (calm, workhorse)? Any mood words?" *(skip if the product is API/CLI-only)*
 
 ### Day-one content
-17. **Seed content** — "On day one, what's inside: AI-generated seed content / content you'll provide / imported from ⟨existing source⟩? Recommended: never ship empty — an empty product looks broken." (feeds PRD §16)
+17. **Seed content** — "On day one, what's inside: AI-generated seed content / content you'll provide / imported from ⟨existing source⟩? Recommended: never ship empty — an empty product looks broken." (feeds masterplan §16)
 
 ## Adaptive rules
 
-- **Fate = "internal, just me"** → skip 13, 15–16 become optional, marketing-ish questions never asked; security scales down (PRD §12 notes it).
+- **Fate = "internal, just me"** → skip 13, 15–16 become optional, marketing-ish questions never asked; security scales down (masterplan §12 notes it).
 - **Verdict = "Don't build"** → skip 9–11 and 13; keep 12 (budget) — deploying an existing product still costs hosting/API money. Interrogation shrinks to setup preferences for the chosen product.
 - **Budget = ~0** → phase 4 constrains to free tiers; flag any feature that can't survive that before continuing.
 - **User picked "you decide" ≥3 times in a row** → stop asking; decide the rest yourself, list all agent decisions at GATE C for one batch review.
