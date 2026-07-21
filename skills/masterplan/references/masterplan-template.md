@@ -2,7 +2,9 @@
 
 Copy this structure into the package's `masterplan.md` and fill every section. **Every section resolves to a DECISION with a short rationale. No option lists. No TBD.** If a section genuinely does not apply, keep the heading and write "Not applicable — ⟨reason⟩" so the executing agent knows it was considered, not forgotten. Scale depth to the project: a small tool gets short sections, a large app gets long ones.
 
-**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a **Mermaid** diagram, not just prose - lavish renders them and turns them into editable Excalidraw whiteboards during review, and the sources render natively on GitHub and most viewers (see `references/lavish-export.md`). The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows (`flowchart`), §7 data model (`erDiagram`), §8 multi-actor/async endpoints (`sequenceDiagram`), §11 architecture (`flowchart` with `subgraph`), §18 build order (`flowchart`). Apply the **colour-semantics classes** in every flowchart via `classDef` (entry = indigo, process = slate, datastore = amber, external = teal) so the same kind of node always reads the same; `erDiagram` and `sequenceDiagram` take no classes - their structure carries the semantics. Keep diagrams valid Mermaid - one that fails to parse renders blank in review: quote any label containing punctuation Mermaid parses (`m1["M1 (walking skeleton)"]`, `done(["Success: published"])`), and never name a node `end` (reserved word).
+**Decisions in prose, not artifacts that go stale.** Record decisions as prose and contracts, not brittle file paths or implementation snippets that rot the moment the executor names things differently. One deliberate exception: a snippet that *encodes a decision* — a state machine, reducer, schema, or type shape — may be inlined, trimmed to its decision-rich part (§7's schema is exactly this).
+
+**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a **Mermaid** diagram, not just prose — lavish renders them and turns them into editable Excalidraw whiteboards during review, and the sources render natively on GitHub and most viewers (see `references/lavish-export.md`). The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows (`flowchart`), §7 data model (`erDiagram`), §8 multi-actor/async endpoints (`sequenceDiagram`), §11 architecture (`flowchart` with `subgraph`), §18 build order (`flowchart`). Apply the **colour-semantics classes** in every flowchart via `classDef` (entry = indigo, process = slate, datastore = amber, external = teal) so the same kind of node always reads the same; `erDiagram` and `sequenceDiagram` take no classes — their structure carries the semantics. Keep diagrams valid Mermaid — one that fails to parse renders blank in review: quote any label containing punctuation Mermaid parses (`m1["M1 (walking skeleton)"]`, `done(["Success: published"])`), and never name a node `end` (reserved word).
 
 The `classDef` block every flowchart starts with:
 
@@ -28,7 +30,9 @@ The evidence that this should exist. Table plus the single most important senten
 | ExampleApp | Link-in-bio pages with analytics | Page-builder flow, pricing model | Proprietary (pattern only) |
 | example-oss | Self-hosted link pages | Data model, deploy setup | MIT |
 
-**The one difference:** ⟨exactly what makes this worth building instead of deploying the closest existing product⟩
+**Absorption level (phase 2):** ⟨fork & adapt ⟨base repo⟩ / assemble (chimera) / differentiate / fresh⟩ — one line on why this rung.
+
+**The one difference:** ⟨what makes this build distinct from the closest existing product — mandatory for "differentiate"; for the other rungs, what makes it yours⟩
 
 ## 3. Target users & business model
 
@@ -159,6 +163,8 @@ The chosen stack — one choice per layer, with rationale tied to sections 3 and
 | Database | ⟨engine⟩ | ⟨reason⟩ |
 | Hosting | ⟨platform⟩ | ⟨reason — must fit §3 budget⟩ |
 
+One stack, already decided: the phase-4 comparison (2–3 options, owner ratified) happened in the decision process, not here. Runner-up stacks and why they lost go to §20 so the executor doesn't second-guess this table.
+
 ## 11. Architecture **[diagram]**
 
 How the pieces connect — a short prose description plus a diagram. Use a `flowchart` with `subgraph` containers to show what runs where:
@@ -201,6 +207,8 @@ The chimera map: each major component anchored to a proven implementation. Patte
 | ⟨e.g. drag-drop editor⟩ | ⟨repo URL⟩ | MIT | Code — adapt directly |
 | ⟨e.g. onboarding flow⟩ | ⟨product⟩ | Proprietary | Pattern only |
 
+Quality bar for what's worth anchoring to: prefer simple, deep interfaces — small surface, complexity hidden — for long-term maintainability.
+
 ## 15. Design direction
 
 Prevents functionally-correct-but-generic output:
@@ -228,22 +236,24 @@ Everything the owner must provide, and when the build needs it:
 
 ## 18. Build order **[diagram]**
 
-The sequence STATUS.md mirrors — numbered milestones, each independently verifiable, ending with the full QA pass. Lead with a Mermaid `flowchart` of milestone dependencies (what unblocks what) so the plan is legible in one glance during the walkthrough:
+The sequence STATUS.md mirrors — numbered milestones ending with the full QA pass. Milestones are **tracer bullets**: after the walking skeleton, each one is a COMPLETE vertical slice through every layer (UI → API → data), demoable on its own — never a horizontal layer that only pays off later. Size each slice to **one agent context window**: a milestone too big to finish in one session is two milestones. Lead with a Mermaid `flowchart` of the **blocking edges** — which slice unblocks which — so the plan is legible in one glance and independent slices are visibly parallelizable:
 
 ```mermaid
 flowchart LR
   classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
   classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
-  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
-  m1[M1 Scaffold]:::proc --> m2[M2 Data layer]:::store
-  m2 --> m3[M3 Features]:::proc
-  m3 --> m4[M4 Full QA pass]:::entry
+  m1["M1 Walking skeleton"]:::proc --> m2["M2 ⟨core feature⟩ slice"]:::proc
+  m1 --> m3["M3 ⟨second feature⟩ slice"]:::proc
+  m2 --> m4["M4 Full QA pass"]:::entry
+  m3 --> m4
 ```
 
-1. **M1 — Scaffold:** repo, stack, CI-less local run works.
-2. **M2 — Data layer:** schema migrated, seed data loads.
-3. **M⟨n⟩ — …**
-4. **M⟨last⟩ — Full QA pass:** every acceptance criterion in §4 verified with evidence, **and** the interaction baseline in `references/ui-baseline.md` walked and confirmed on the primary flows (its own verification checklist) — for any project with a UI.
+1. **M1 — Walking skeleton:** the thinnest end-to-end slice — one page, one API call, one row in the database, runnable locally. Every later slice hangs off it.
+2. **M2 — ⟨core feature⟩ slice:** the feature complete through every layer, demoable alone, its §4 acceptance criteria and behaviour-level tests passing.
+3. **M⟨n⟩ — …** (one vertical slice each; dependencies exactly as the blocking-edge diagram shows)
+4. **M⟨last⟩ — Full QA pass:** every acceptance criterion in §4 verified with evidence, the testing strategy's required coverage green, **and** the interaction baseline in `references/ui-baseline.md` walked and confirmed on the primary flows (its own verification checklist) — for any project with a UI.
+
+**Testing strategy (decided in phase 4):** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. Each feature slice lands with the tests for its §4 acceptance criteria; state here anything beyond those that must be covered (e.g. the primary flows end-to-end).
 
 ## 19. Non-goals
 

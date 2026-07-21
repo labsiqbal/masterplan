@@ -35,26 +35,31 @@ For the confirmed candidates: user flows and page structures (what screens exist
 
 This feeds **masterplan §15 (design direction)** as concrete, sourced convention — "products X and Y in this space all do ⟨pattern⟩" — not opinion, and complements the universal `ui-baseline.md`. Record it in the `references/` notes so §15 and §6 can cite it.
 
-## Stage 4 — The verdict
+## Stage 4 — The absorption map
 
-Decide honestly:
+The standing assumption is **we are building** — research feeds the build, it does not gate it. Decide honestly how heavily to absorb what exists (every rung is a BUILD outcome):
 
 ```
-Does a deployable product already cover the pitch (including "the one difference")?
-├─ YES → DON'T BUILD.
-│        The package becomes a setup/adaptation document for that product:
-│        masterplan sections re-aim at configuring/deploying/extending it, the build
-│        order becomes a setup order. Say it plainly: "deploy X, save months."
-└─ NO → Is there meaningful prior art?
-    ├─ YES → BUILD WITH DIFFERENTIATION.
-    │        masterplan §2 must state THE one difference in a single sentence.
-    │        If you cannot write that sentence, the verdict is "don't build."
-    └─ NO → BUILD FRESH.
+Is there a compatibly-licensed base already close to the pitch?
+├─ YES → FORK & ADAPT.
+│        Start from it, modify heavily, make it yours. masterplan §14 anchors to
+│        the base repo; the build order starts from its scaffold, not from zero.
+└─ NO → Are there proven parts to compose from?
+    ├─ YES, spread across several sources → ASSEMBLE (CHIMERA).
+    │        Compose from proven components/patterns, each anchored to a reference.
+    ├─ YES, whole similar products exist but with a clear gap → DIFFERENTIATE.
+    │        masterplan §2 must state THE one difference in a single sentence —
+    │        and borrow the proven patterns for everything that is not the difference.
+    └─ NO → FRESH.
              Rare. Components still get anchored to references where possible —
              even a novel product is assembled from proven parts.
 ```
 
-Deliver the verdict before interrogation (phase 3): it changes which questions matter.
+Two absorption currencies, one rule: **patterns and ideas** (flows, UX, architecture) are free to absorb from anything, including proprietary products. **Actual code** (the fork/copy path) is gated by the license table below.
+
+**The one brake — false premise.** If the scan or the phase-1 target-grounding shows the request rests on a factually wrong premise — the thing already exists *in the user's own target/codebase*, or the ask is built on a mistaken belief — stop and write `VERDICT.md` per `references/verdict-template.md`. That is the only no-build path, and it is rare. "A similar product exists somewhere" is never it; that is what the ladder above absorbs.
+
+Deliver the absorption decision before interrogation (phase 3): it changes which questions matter.
 
 ## License table
 

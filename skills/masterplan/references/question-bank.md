@@ -6,7 +6,7 @@ A **menu, not a script**. Phase 1 uses only what the idea dump leaves unclear; a
 
 Choosing it is a real answer: decide yourself, write the decision into the masterplan as an agent decision with rationale, and move on.
 
-Rephrase questions naturally in context — these are patterns, not scripts to read verbatim.
+Rephrase questions naturally in context — these are patterns, not scripts to read verbatim. Questions are challenges, not a survey: where evidence (phase-2 findings, the target itself) contradicts an answer, say so plainly and resolve it into a recorded decision. Never ask the user for a fact you can look up yourself — the user's job is decisions.
 
 ## Phase 1 — Locking the pitch
 
@@ -26,7 +26,7 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 8. **Today's workaround** — "How do these users solve this today: manually / a competitor (⟨from phase 2⟩) / they don't?" (their current tool defines your migration story)
 
 ### Features & flows
-9. **Core feature confirmation** — from everything so far: "The core is ⟨X⟩; ⟨Y⟩ and ⟨Z⟩ are secondary. Right, or is the weight elsewhere?"
+9. **Core feature confirmation (challenge the bloat)** — from everything so far: "The core is ⟨X⟩; ⟨Y⟩ and ⟨Z⟩ are secondary — nothing breaks if v1 ships without them. Right, or is the weight elsewhere?" (anything the user promotes to core must name what breaks without it)
 10. **Flow check (evidence-based correction)** — when the user's described flow conflicts with phase 2 findings: "You describe ⟨flow⟩; X, Y, Z all do ⟨other flow⟩ because ⟨reason⟩. Deliberate difference / adopt the proven pattern?"
 11. **Launch cut** — "Anything you're explicitly NOT building in v1? Recommended: name at least two — non-goals protect the build from drift." (feeds masterplan §19)
 
@@ -44,10 +44,14 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 ### Day-one content
 17. **Seed content** — "On day one, what's inside: AI-generated seed content / content you'll provide / imported from ⟨existing source⟩? Recommended: never ship empty — an empty product looks broken." (feeds masterplan §16)
 
+## Phase 4 — The stack decision (owner ratifies)
+
+18. **Stack ratification** — after the design-it-twice comparison (2–3 genuinely different stacks, compared on quality / scalability / maintainability / ecosystem, not dev cost): "Stack ⟨A — one-line character⟩ vs ⟨B — one-line character⟩⟨ vs C⟩: they trade off like ⟨one-line summary per axis⟩. Recommended: ⟨A⟩ because ⟨reason⟩." The owner picks; "you decide" returns the call to the recommendation. masterplan §10 records the one chosen stack; runner-up rationale goes to §20. (This is the only technical decision put to the owner — architecture, data model, and security stay agent-owned.)
+
 ## Adaptive rules
 
 - **Fate = "internal, just me"** → skip 13, 15–16 become optional, marketing-ish questions never asked; security scales down (masterplan §12 notes it).
-- **Verdict = "Don't build"** → skip 9–11 and 13; keep 12 (budget) — deploying an existing product still costs hosting/API money. Interrogation shrinks to setup preferences for the chosen product.
+- **False-premise stop (phase 2)** → the pipeline stopped before interrogation; no phase-3 questions exist to ask. If the user corrects course to a different, real premise, restart at phase 1 with the corrected pitch.
 - **Budget = ~0** → phase 4 constrains to free tiers; flag any feature that can't survive that before continuing.
 - **User picked "you decide" ≥3 times in a row** → stop asking; decide the rest yourself, list all agent decisions at GATE C for one batch review.
 - **Answer already present in the idea dump** → never ask it again; record it as confirmed.

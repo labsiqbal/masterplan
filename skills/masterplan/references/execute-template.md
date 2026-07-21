@@ -10,7 +10,7 @@ You are building this project end-to-end. Everything you need is in this folder.
 
 ## Rules
 
-1. **Read `masterplan.md` fully before writing anything.** It contains every decision, already made. Do not re-litigate decisions or "improve" them — section 20 (Considered and rejected) explains the choices that might look like mistakes. If you find a genuine contradiction or impossibility in the masterplan, stop and report it; do not improvise around it.
+1. **Read `masterplan.md` fully before writing anything.** It contains every decision, already made. Do not re-litigate decisions or "improve" them — section 20 (Considered and rejected) explains the choices that might look like mistakes. If you find a genuine contradiction or impossibility in the masterplan, stop and report it; do not improvise around it. Decisions are recorded as prose and contracts, deliberately free of implementation detail — where a snippet does appear (a schema, a state machine, a type shape), it encodes a decision: honor what it decides, don't treat it as literal code to paste.
 
 2. **Resume rule.** Before starting, read `STATUS.md`. If any milestones are checked, verify they actually work — run the app, run the checks, do not trust the checkmarks blindly — then continue from the first unchecked milestone. Treat any milestone marked `[!] needs rework` as unchecked: rebuild it according to its note before moving on. Never restart from zero when a partial build exists.
 

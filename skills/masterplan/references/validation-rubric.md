@@ -10,7 +10,7 @@ Fill the ⟨blanks⟩ and dispatch:
 >
 > DECISION SET:
 > - Pitch: ⟨confirmed pitch paragraph⟩
-> - Prior-art verdict: ⟨verdict + the one difference⟩
+> - Absorption map: ⟨absorption level (fork & adapt / assemble / differentiate / fresh) + the one difference⟩
 > - Features & acceptance criteria: ⟨list⟩
 > - User flows: ⟨summary or diagrams⟩
 > - Business: ⟨audience, budget/month, revenue model, fate⟩

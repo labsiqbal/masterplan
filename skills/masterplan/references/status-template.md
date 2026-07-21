@@ -2,6 +2,8 @@
 
 Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from masterplan section 18. masterplan creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
 
+Milestones mirror §18's tracer bullets: after the walking skeleton, each is a complete vertical slice through every layer, demoable on its own, sized to one agent context window, with dependencies as §18's blocking-edge diagram shows. A checked milestone is therefore always something the owner can be shown running.
+
 ---
 
 # Status: ⟨project name⟩
@@ -17,10 +19,10 @@ Copy everything below the `---` into the package's `STATUS.md`, pre-filled with 
 
 ## Milestones
 
-- [ ] **M1 — Scaffold** — ⟨what M1 covers, from masterplan §18⟩
+- [ ] **M1 — Walking skeleton** — ⟨the thinnest end-to-end slice, from masterplan §18⟩
   - Note: —
   - Evidence: —
-- [ ] **M2 — Data layer** — ⟨…⟩
+- [ ] **M2 — ⟨core feature⟩ slice** — ⟨…⟩
   - Note: —
   - Evidence: —
 - [ ] **M⟨n⟩ — …**

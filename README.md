@@ -12,7 +12,7 @@ A six-phase pipeline with three review gates:
 
 ```
 1. Intake + clarification loop ── GATE A: researchable pitch confirmed
-2. Prior-art: quick scan → direction confirmed → deep-dive → honest verdict
+2. Prior-art: quick scan → direction confirmed → deep-dive → absorption map
 3. Product/business interrogation
 4. Technical research + per-component reference map
 5. Validate: fresh red-team agent ── GATE B: zero blockers
@@ -20,9 +20,9 @@ A six-phase pipeline with three review gates:
 ```
 
 1. **Intake** — clarifies the idea in conversation until it locks into a confirmed pitch: what it is, who it's for, and the core action.
-2. **Prior-art** — staged research into what already exists, ending in one verdict: *don't build* (deploy the existing thing), *build with differentiation*, or *build fresh*.
-3. **Interrogation** — asks the user product and business questions (multiple choice, with a "you decide" option on every one); technical calls are the agent's to make.
-4. **Technical research** — chooses the stack, data model, and architecture; verifies external APIs are live and within budget; anchors each major component to a proven reference implementation with its license checked.
+2. **Prior-art** — staged research into what already exists, ending in an **absorption map**: how heavily to adopt proven prior art (*fork & adapt*, *assemble*, *differentiate*, or *fresh* — all build outcomes). The one brake: a request resting on a factually false premise stops honestly with an investigation record instead.
+3. **Interrogation** — asks the user product and business questions (multiple choice, with a "you decide" option on every one), challenging vague or contradicted choices with evidence from the research.
+4. **Technical research** — compares 2–3 genuinely different stacks and recommends one for the owner to ratify; decides data model and architecture itself; verifies external APIs are live and within budget; anchors each major component to a proven reference implementation with its license checked.
 5. **Validate** — a fresh agent with no prior context red-teams the decision set before anything is written; blockers must be cleared.
 6. **Write** — produces the package section by section, self-reviews, and hands it to the user for approval.
 
