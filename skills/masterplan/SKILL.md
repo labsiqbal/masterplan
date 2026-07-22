@@ -90,7 +90,7 @@ Two absorption currencies, one rule: **patterns and ideas** (flows, UX, architec
 
 ## Phase 3 — Product/business interrogation
 
-Ask the user **only product and business questions** — audience, features and their behavior, monthly budget for infrastructure/APIs, design taste, day-one content, and the product's fate (open source / commercial / internal). Aim for about a dozen questions, not sixty. Draw from `references/question-bank.md` and let answers eliminate later questions. Where lavish is available, run the interrogation as an input artifact — multiple choice with the "you decide" hatch — instead of chat turns.
+Ask the user **only product and business questions** — audience, features and their behavior, monthly budget for infrastructure/APIs, design taste, day-one content, and the product's fate (open source / commercial / internal). Aim for about a dozen questions, not sixty. Draw from `references/question-bank.md` and let answers eliminate later questions. Where lavish is available, run the interrogation as an input artifact — multiple choice with the "you decide" hatch — instead of chat turns; answers come back through the poll discipline in `references/lavish-export.md` (wait, re-run on timeout).
 
 Hold the adversarial stance here, not just at validation — the grilling rules from Phase 1 still apply (facts looked up yourself, decisions the user's, branch by branch, recommended answers). Challenge feature bloat ("what breaks if v1 ships without this?"), vague flows, and unjustified scope — with evidence, not opinion. The user may describe the flows they want in their own words. Correct with evidence: "the flow you describe conflicts with how users behave in X, Y, Z — all of them do it this way because ⟨reason⟩. Deliberate difference, or adopt the proven pattern?" Every disagreement resolves into a recorded decision — never an objection left hanging.
 
@@ -120,7 +120,7 @@ Before writing anything, submit the decision set to a **fresh agent with no conv
 - Send the **decision summary** — pitch, absorption map, feature list, flows, technical decisions with rationale, reference map. **Never send the conversation transcript**; a validator that reads the conversation inherits its bias.
 - The mandate is adversarial: **find what is wrong, not what is good.** Axes: completeness, consistency, feasibility, optimization, risk.
 - The report comes back at three levels: 🔴 **Blocker**, 🟡 **Improvement**, 🟢 **Nice-to-have**. Blockers return to their owning phase and get fixed. Improvements are decided with the user. Rejected suggestions are recorded in the masterplan's considered-and-rejected section so the executing agent doesn't "fix" deliberate choices.
-- Save the report to the package's `references/validation-report.md`. Where lavish is available, present the 🔴🟡🟢 report as a lavish table/comparison so the user reviews and disposes findings on one surface.
+- Save the report to the package's `references/validation-report.md`. Where lavish is available, present the 🔴🟡🟢 report as a lavish table/comparison so the user reviews and disposes findings on one surface (collect dispositions via the poll discipline in `references/lavish-export.md`).
 
 **GATE B — Do not write the masterplan while blockers remain.**
 
@@ -154,7 +154,7 @@ Write the masterplan section by section (all sections in the template are requir
 3. **Ambiguity** — if a requirement can be read two ways, pick one and make it explicit.
 4. **Diagram coverage** — every flow/step a reader would follow visually has a diagram, every diagram is valid Mermaid (a parse failure renders blank), and — where lavish exported an artifact — the export shows all of them rendered.
 
-**GATE C — The user reviews the package.** Present it, walk through the load-bearing decisions briefly, and revise until approved. Where lavish is available, present the package as a lavish artifact: the user annotates and sketches directly, `lavish-axi poll` collects the feedback, and approval ends in `lavish-axi export` (plus `share` for a link).
+**GATE C — The user reviews the package.** Present it, walk through the load-bearing decisions briefly, and revise until approved. Where lavish is available, present the package as a lavish artifact: the user annotates and sketches directly, `lavish-axi poll` collects the feedback (a long-poll: leave it running, re-run it if it times out - see `references/lavish-export.md`), and approval ends in `lavish-axi export` (plus `share` for a link).
 
 ## Generator state — `references/decisions.md`
 
