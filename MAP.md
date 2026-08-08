@@ -8,10 +8,10 @@ Agent skill: idea → execution-ready masterplan package (Markdown pipeline + op
 
 | Need | Open |
 |---|---|
-| Skill procedure (phases, gates, revise) | `skills/masterplan/SKILL.md` |
-| Package templates | `skills/masterplan/references/` |
-| Overview + install | `README.md` |
-| Project rules | `AGENTS.md` |
+| Skill procedure (phases, gates, revise) | [skills/masterplan/SKILL.md](skills/masterplan/SKILL.md) |
+| Package templates | [skills/masterplan/references/](skills/masterplan/references/) |
+| Overview + install | [README.md](README.md) |
+| Project rules | [AGENTS.md](AGENTS.md) |
 
 ## Layout
 
