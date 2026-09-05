@@ -44,9 +44,9 @@ Use only what the idea dump leaves unclear; skip anything already answered.
 ### Day-one content
 17. **Seed content** — "On day one, what's inside: AI-generated seed content / content you'll provide / imported from ⟨existing source⟩? Recommended: never ship empty — an empty product looks broken." (feeds masterplan §16)
 
-## Phase 4 — The stack decision (owner ratifies)
+## Phase 4 — The stack decision (resolved decision authority ratifies)
 
-18. **Stack ratification** — after the design-it-twice comparison (2–3 genuinely different stacks, compared on quality / scalability / maintainability / ecosystem, not dev cost): "Stack ⟨A — one-line character⟩ vs ⟨B — one-line character⟩⟨ vs C⟩: they trade off like ⟨one-line summary per axis⟩. Recommended: ⟨A⟩ because ⟨reason⟩." The owner picks; "you decide" returns the call to the recommendation. masterplan §10 records the one chosen stack; runner-up rationale goes to §20. (This is the only technical decision put to the owner — architecture, data model, and security stay agent-owned.)
+18. **Stack ratification** — after the design-it-twice comparison (2–3 genuinely different stacks, compared on quality / scalability / maintainability / ecosystem, not dev cost): "Stack ⟨A — one-line character⟩ vs ⟨B — one-line character⟩⟨ vs C⟩: they trade off like ⟨one-line summary per axis⟩. Recommended: ⟨A⟩ because ⟨reason⟩." The resolved decision authority picks; "you decide" returns the call to the recommendation. masterplan §10 records the one chosen stack; runner-up rationale goes to §20. (This is the only technical decision put to the resolved decision authority — architecture, data model, and security stay agent-owned.)
 
 ## Adaptive rules
 

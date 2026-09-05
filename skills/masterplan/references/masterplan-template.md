@@ -4,16 +4,7 @@ Copy this structure into the package's `masterplan.md` and fill every section. *
 
 **Decisions in prose, not artifacts that go stale.** Record decisions as prose and contracts, not brittle file paths or implementation snippets that rot the moment the executor names things differently. One deliberate exception: a snippet that *encodes a decision* — a state machine, reducer, schema, or type shape — may be inlined, trimmed to its decision-rich part (§7's schema is exactly this).
 
-**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a **Mermaid** diagram, not just prose — lavish renders them and turns them into editable Excalidraw whiteboards during review, and the sources render natively on GitHub and most viewers (see `references/lavish-export.md`). The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows (`flowchart`), §7 data model (`erDiagram`), §8 multi-actor/async endpoints (`sequenceDiagram`), §11 architecture (`flowchart` with `subgraph`), §18 build order (`flowchart`). Apply the **colour-semantics classes** in every flowchart via `classDef` (entry = indigo, process = slate, datastore = amber, external = teal) so the same kind of node always reads the same; `erDiagram` and `sequenceDiagram` take no classes — their structure carries the semantics. Keep diagrams valid Mermaid — one that fails to parse renders blank in review: quote any label containing punctuation Mermaid parses (`m1["M1 (walking skeleton)"]`, `done(["Success: published"])`), and never name a node `end` (reserved word).
-
-The `classDef` block every flowchart starts with:
-
-```
-classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
-classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
-classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
-classDef ext fill:#ccfbf1,stroke:#14b8a6,color:#0f766e
-```
+**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a diagram, not just prose. Diagrams are **hand-authored SVG files** in the package's `references/diagrams/` folder, embedded as `![⟨caption⟩](references/diagrams/⟨name⟩.svg)` — full design system, color semantics, per-type layouts, and verification procedure in `references/diagrams.md`. The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows, §7 data model, §8 multi-actor/async endpoints, §11 architecture, §18 build order. One SVG file per diagram, named after its section (`s5-flow-checkout.svg`, `s7-data-model.svg`, `s11-architecture.svg`). The same node kind gets the same color in every diagram of the package.
 
 ---
 
@@ -36,7 +27,7 @@ The evidence that this should exist. Table plus the single most important senten
 
 ## 3. Target users & business model
 
-Who uses it (concrete persona, not "everyone"), how many at launch scale, and how it sustains itself: free / one-time / subscription / internal cost center. Include the owner's stated monthly budget for infrastructure and APIs — later sections must fit inside it.
+Who uses it (concrete persona, not "everyone"), how many at launch scale, and how it sustains itself: free / one-time / subscription / internal cost center. Include the resolved decision authority's stated monthly budget for infrastructure and APIs — later sections must fit inside it.
 
 ## 4. Features
 
@@ -51,21 +42,10 @@ One block per feature. A feature without acceptance criteria does not exist.
 
 ## 5. User flows **[diagram]**
 
-One Mermaid `flowchart` per primary flow, plus a sentence naming its start and success end-state.
+One SVG flow diagram per primary flow, plus a sentence naming its start and success end-state:
 
-```mermaid
-flowchart TD
-  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
-  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
-  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
-  land([Visitor lands on home]):::entry --> q{Has account?}
-  q -- no --> signup[Sign up]:::proc
-  q -- yes --> dash[Dashboard]:::proc
-  signup --> dash
-  dash --> create[Creates first item]:::proc
-  create --> save[(Save item)]:::store
-  save --> done(["Success: item published"]):::entry
-  class q entry
+```
+![Visitor signup → first item published](references/diagrams/s5-flow-first-item.svg)
 ```
 
 ## 6. Pages & screens
@@ -81,24 +61,13 @@ Inventory of every page/screen with its components — the executing agent build
 
 ## 7. Data model **[diagram]**
 
-The actual schema, not "needs a database". Lead with a Mermaid `erDiagram` so relations read at a glance in the deck, then the exact schema below it:
+The actual schema, not "needs a database". Lead with an SVG data-model diagram (one rect per table, fields as sublabels, relation arrows with cardinality) so relations read at a glance, then the exact schema below it:
 
-```mermaid
-erDiagram
-  users ||--o{ items : owns
-  users {
-    uuid id PK
-    text email
-  }
-  items {
-    uuid id PK
-    uuid user_id FK
-    text title
-    text status
-  }
+```
+![users ⋯ items data model](references/diagrams/s7-data-model.svg)
 ```
 
-Every table/collection, every field, every relation (`erDiagram` attributes are `type name` with an optional `PK` / `FK` marker — keep identifiers plain):
+Every table/collection, every field, every relation — the SVG diagram shows them; the schema below is the executable truth:
 
 ```sql
 CREATE TABLE users (
@@ -120,16 +89,10 @@ If the product has no persistent data, state that and why.
 
 ## 8. API contracts
 
-Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add a Mermaid `sequenceDiagram` showing who calls whom in what order — these are the flows a walkthrough audience most needs to see:
+Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add an SVG sequence diagram (lifelines + horizontal call arrows top-to-bottom) showing who calls whom in what order:
 
-```mermaid
-sequenceDiagram
-  participant B as Browser
-  participant A as API
-  participant D as Database
-  B->>A: POST /api/items
-  A->>D: insert item
-  A-->>B: 201 {id}
+```
+![POST /api/items sequence](references/diagrams/s8-seq-create-item.svg)
 ```
 
 The endpoint list — route, payload, response, error shape:
@@ -163,29 +126,14 @@ The chosen stack — one choice per layer, with rationale tied to sections 3 and
 | Database | ⟨engine⟩ | ⟨reason⟩ |
 | Hosting | ⟨platform⟩ | ⟨reason — must fit §3 budget⟩ |
 
-One stack, already decided: the phase-4 comparison (2–3 options, owner ratified) happened in the decision process, not here. Runner-up stacks and why they lost go to §20 so the executor doesn't second-guess this table.
+One stack, already decided: the phase-4 comparison (2–3 options, ratified by the resolved decision authority) happened in the decision process, not here. Runner-up stacks and why they lost go to §20 so the executor doesn't second-guess this table.
 
 ## 11. Architecture **[diagram]**
 
-How the pieces connect — a short prose description plus a diagram. Use a `flowchart` with `subgraph` containers to show what runs where:
+How the pieces connect — a short prose description plus an SVG diagram with dashed boundary rects for what runs where (browser / host / region):
 
-```mermaid
-flowchart LR
-  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
-  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
-  classDef store fill:#fef3c7,stroke:#f59e0b,color:#92400e
-  classDef ext fill:#ccfbf1,stroke:#14b8a6,color:#0f766e
-  browser([Browser]):::entry
-  subgraph host[Hosting platform]
-    fe[Frontend]:::proc
-    api[Backend API]:::proc
-  end
-  db[(Database)]:::store
-  services[External services]:::ext
-  browser --> fe
-  fe --> api
-  api --> db
-  api --> services
+```
+![System architecture](references/diagrams/s11-architecture.svg)
 ```
 
 Name the boundaries: what runs where, what talks to what, what is stateless.
@@ -209,6 +157,8 @@ The chimera map: each major component anchored to a proven implementation. Patte
 
 Quality bar for what's worth anchoring to: prefer simple, deep interfaces — small surface, complexity hidden — for long-term maintainability.
 
+When any row absorbs code, link package artifacts produced by `references/code-absorption.md`: pinned repos, path-level license report, source→target records, and (for Assemble) chimera seam contracts. Every such record maps to §18 and one or more stable local ticket contracts.
+
 ## 15. Design direction
 
 Prevents functionally-correct-but-generic output:
@@ -219,15 +169,15 @@ Prevents functionally-correct-but-generic output:
 - **Must NOT look like:** ⟨the failure mode — e.g. "a default component-library dashboard with stock gradients"⟩.
 - **Industry UX conventions (from phase-2 research):** the table-stakes patterns this product's *category* expects, cited from the deep-dive — "products X and Y in this space all do ⟨pattern⟩, so we adopt it" (e.g. fintech → transaction confirmations + audit trail; SaaS dashboard → filters/saved views/bulk actions; consumer → onboarding coach + rich empty states). List which the build adopts and any it deliberately drops (→ §20). This is the layer *above* the universal `references/ui-baseline.md` floor — it makes the product feel native to its industry, not just generically correct.
 
-This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory. It also drives the look of the lavish-exported artifact (`references/lavish-export.md`), so the deck previews the product faithfully.
+This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory. It also drives the look of the HTML walkthrough artifact (`references/html-export.md`), so the deck previews the product faithfully.
 
 ## 16. Content & seed data
 
-What the product contains on day one so it ships alive, not as an empty shell: what content, from where (AI-generated / owner-provided / imported), and minimum quantities ("20 seeded articles", "5 example projects"). If the executing agent generates it, say so and set the quality bar.
+What the product contains on day one so it ships alive, not as an empty shell: what content, from where (AI-generated / authority-provided / imported), and minimum quantities ("20 seeded articles", "5 example projects"). If the executing agent generates it, say so and set the quality bar.
 
 ## 17. Required credentials
 
-Everything the owner must provide, and when the build needs it:
+Everything the resolved authority must provide or authorize, and when the build needs it:
 
 | Credential | Used by | Needed at milestone |
 |---|---|---|
@@ -236,24 +186,25 @@ Everything the owner must provide, and when the build needs it:
 
 ## 18. Build order **[diagram]**
 
-The sequence STATUS.md mirrors — numbered milestones ending with the full QA pass. Milestones are **tracer bullets**: after the walking skeleton, each one is a COMPLETE vertical slice through every layer (UI → API → data), demoable on its own — never a horizontal layer that only pays off later. Size each slice to **one agent context window**: a milestone too big to finish in one session is two milestones. Lead with a Mermaid `flowchart` of the **blocking edges** — which slice unblocks which — so the plan is legible in one glance and independent slices are visibly parallelizable:
+This section is the milestone map, not executor prose. Decompose every milestone into immutable local ticket contracts per `references/ticket-contract.md`: package `references/tickets/INDEX.md` catalogs them and each `references/tickets/<ID>.md` is one execution-ready vertical slice that fits one agent context window. The executor must be able to complete that ticket by reading its contract and linked docs, without reading this whole masterplan. Canonical project queue owns mutable status; fallback `STATUS.md` owns it when no queue exists. Both map 1:1 by stable ticket ID.
 
-```mermaid
-flowchart LR
-  classDef entry fill:#eef2ff,stroke:#6366f1,color:#3730a3
-  classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
-  m1["M1 Walking skeleton"]:::proc --> m2["M2 ⟨core feature⟩ slice"]:::proc
-  m1 --> m3["M3 ⟨second feature⟩ slice"]:::proc
-  m2 --> m4["M4 Full QA pass"]:::entry
-  m3 --> m4
+Milestones are **tracer bullets**: after the walking skeleton, each is a complete vertical slice through every layer (UI → API → data), demoable alone. A milestone may contain many dependency-ordered tickets; each ticket names exact target paths/contracts, changes, retained and changed behavior, acceptance criteria, commands, evidence destination, and rollback boundary. When prior art contributes code, ticket source repository + pinned SHA + source paths + license/attribution are mandatory. No horizontal tickets, cyclic dependencies, or catch-all integration tickets.
+
+```
+![Build order — blocking edges](references/diagrams/s18-build-order.svg)
 ```
 
-1. **M1 — Walking skeleton:** the thinnest end-to-end slice — one page, one API call, one row in the database, runnable locally. Every later slice hangs off it.
-2. **M2 — ⟨core feature⟩ slice:** the feature complete through every layer, demoable alone, its §4 acceptance criteria and behaviour-level tests passing.
-3. **M⟨n⟩ — …** (one vertical slice each; dependencies exactly as the blocking-edge diagram shows)
-4. **M⟨last⟩ — Full QA pass:** every acceptance criterion in §4 verified with evidence, the testing strategy's required coverage green, **and** the interaction baseline in `references/ui-baseline.md` walked and confirmed on the primary flows (its own verification checklist) — for any project with a UI.
+| Milestone | Outcome | Ticket IDs | Depends on |
+|---|---|---|---|
+| `M1` — Walking skeleton | ⟨thinnest runnable end-to-end slice⟩ | `PRJ-001` | none |
+| `M2` — ⟨core feature⟩ | ⟨demoable feature through every layer⟩ | `PRJ-002`, `PRJ-003` | `M1` |
+| `M9` — Full QA | Every §4 criterion and required UI baseline check evidenced | `PRJ-999` | all feature tickets |
 
-**Testing strategy (decided in phase 4):** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. Each feature slice lands with the tests for its §4 acceptance criteria; state here anything beyond those that must be covered (e.g. the primary flows end-to-end).
+**Ticket graph:** [ticket catalog](references/tickets/INDEX.md) is deterministic graph truth. Every catalog ticket appears once in §18 table with matching milestone; §18 contains no unknown IDs. Generate SVG build-order diagram from this validated catalog graph rather than treating SVG as independently parsed graph data.
+
+**Testing strategy (decided in phase 4):** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. Each ticket lands with tests for its mapped §4 acceptance criteria. Full QA ticket verifies every criterion, required primary flow, and — for UI projects — `references/ui-baseline.md` with evidence.
+
+**Queue/export binding:** name canonical task state and link its durable `STATUS.md` snapshot. Queue records contain stable ID, mutable status, dependencies, contract link, and evidence pointer; ticket prose remains local.
 
 ## 19. Non-goals
 

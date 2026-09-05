@@ -1,33 +1,26 @@
 # EXECUTE.md Template
 
-Copy into the package's `EXECUTE.md`, filling the ⟨placeholders⟩. This file is the **single prompt**: the owner hands it (or its path) to any capable coding agent, and the build runs end-to-end. Keep it short — the masterplan carries the content; this file carries the rules of engagement.
+Copy into package `EXECUTE.md`, filling placeholders. This prompt starts ticket-by-ticket execution; local ticket contracts carry work detail.
 
 ---
 
 # Execute: ⟨project name⟩
 
-You are building this project end-to-end. Everything you need is in this folder.
+Build this project one ticket at a time.
 
 ## Rules
 
-1. **Read `masterplan.md` fully before writing anything.** It contains every decision, already made. Do not re-litigate decisions or "improve" them — section 20 (Considered and rejected) explains the choices that might look like mistakes. If you find a genuine contradiction or impossibility in the masterplan, stop and report it; do not improvise around it. Decisions are recorded as prose and contracts, deliberately free of implementation detail — where a snippet does appear (a schema, a state machine, a type shape), it encodes a decision: honor what it decides, don't treat it as literal code to paste.
-
-2. **Resume rule.** Before starting, read `STATUS.md`. If any milestones are checked, verify they actually work — run the app, run the checks, do not trust the checkmarks blindly — then continue from the first unchecked milestone. Treat any milestone marked `[!] needs rework` as unchecked: rebuild it according to its note before moving on. Never restart from zero when a partial build exists.
-
-3. **Evidence rule.** Check a milestone off only with evidence: a passing test, a rendering page, a succeeding command — recorded in the milestone's note. "The code is written" is not evidence.
-
-4. **Credentials rule.** Never invent or fake keys. Create `.env.example` early with every variable from masterplan section 17. When a milestone needs a real credential, stop and ask the owner for it — do not stub it and continue as if it worked.
-
-5. **Change-guard rule.** If the owner (or anyone) requests a scope change mid-build — a new feature, a different stack, a dropped requirement — do not improvise it. The masterplan is the single source of truth for this build's entire life. Reply: *"That's a scope change — run it through masterplan revise mode so the masterplan is updated first, then I'll continue against the updated plan."*
-
-6. **Build order.** Follow masterplan section 18 in sequence. The final milestone is always the full QA pass: every acceptance criterion in masterplan section 4, verified with evidence.
-
-7. **Design-stack rule.** If this project has a UI, engage the engine's design skills **before writing any frontend code**: `impeccable` (or the platform's frontend-craft equivalent) for the static craft — layout, typography, color, register — plus `motion-library` for the motion layer. They compose; using only one is half a build. If the engine lacks these skills, carry the discipline manually: build to masterplan section 15 (design direction, mood, look references, must-not-look-like) and never ship default component-library styling. A UI that works and passes the interaction floor but ignores section 15 is not done.
-
-8. **Interaction baseline rule.** If this project has a UI, `references/ui-baseline.md` is the non-negotiable floor — button/focus/disabled/loading states, loading/empty/error/populated data states, form feedback, keyboard operability, responsive, motion. It is not a suggestion and not optional polish: a surface that skips it is not done, no matter that it "works." Build to it as you go rather than bolting it on at the end, and satisfy its verification checklist in the final QA pass. Deliberate exceptions must already be listed in masterplan section 20; anything not listed there is required.
+1. **Bind workflow.** Read `references/workflow-binding.md`, `references/tickets/INDEX.md`, and `STATUS.md`. `STATUS.md` is canonical only in fallback mode; otherwise it is durable read-only export of configured queue. Resolve current status from canonical source before claiming work. Fallback `STATUS.md` is single-writer: run one executor unless workflow binding names an external atomic claim mechanism.
+2. **Claim one ready ticket.** A ticket is ready only when status is `pending` or `needs-rework` and every dependency is `done`. Claim exactly one by stable ID using canonical queue's atomic ownership convention, or the external atomic claim mechanism named for concurrent fallback execution. If no ready ticket exists, report blockers; never skip dependencies.
+3. **Load bounded context.** Read claimed `references/tickets/<ID>.md` plus its owned and linked docs. This is sufficient execution context. Do not read all of `masterplan.md` unless ticket links a required section or a contradiction demands revise mode.
+4. **Honor boundary.** Change only ticket target paths/contracts; preserve its retained behavior. Local ticket contract and global decisions are immutable during execution. A contradiction, impossibility, or scope request enters masterplan revise mode; executor does not alter global decisions.
+5. **Authority and credentials.** Follow workflow binding. Never invent keys or evidence. Ask resolved decision authority when required authority or credentials are absent.
+6. **Validate and evidence.** Run every ticket validation command. Write actual output/artifacts to expected evidence destination. Mark `done` only when acceptance criteria pass and evidence exists. Otherwise mark `blocked` with exact reason, or roll back within ticket boundary.
+7. **Design and interaction.** UI tickets follow masterplan §15 plus `references/ui-baseline.md`. Engage available frontend craft and motion skills before frontend implementation; use same discipline manually when unavailable.
+8. **Continue.** Release claim, refresh canonical state/export, then claim next ready ticket. Never keep mutable status in ticket files.
 
 ## Definition of done
 
-All milestones in `STATUS.md` checked with evidence, including the final QA pass. For any UI project, that pass includes the `references/ui-baseline.md` verification walked and evidenced (states driven, not screenshotted). Nothing else counts as done.
+Every catalog ticket is `done` with evidence, including full-QA ticket. Every dependency resolves, no claim remains open, and current `STATUS.md` snapshot maps each stable ID 1:1 to canonical state.
 
 Begin.

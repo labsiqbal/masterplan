@@ -1,37 +1,23 @@
 # STATUS.md Template
 
-Copy everything below the `---` into the package's `STATUS.md`, pre-filled with the build order from masterplan section 18. masterplan creates it; the **executing agent** maintains it; the owner reads it any time to see progress without asking anyone.
+Generate in every build package. Mutable ticket prose belongs nowhere here; contracts live under `references/tickets/`.
 
-Milestones mirror §18's tracer bullets: after the walking skeleton, each is a complete vertical slice through every layer, demoable on its own, sized to one agent context window, with dependencies as §18's blocking-edge diagram shows. A checked milestone is therefore always something the owner can be shown running.
+- **Fallback mode:** `STATUS.md` is canonical mutable state and single-writer. Run one executor unless workflow binding names an external atomic claim mechanism.
+- **External queue mode:** `STATUS.md` is durable read-only export/snapshot. Regenerate from canonical queue after state changes; never hand-edit as second queue.
 
 ---
 
 # Status: ⟨project name⟩
 
-**masterplan version:** v1.0
-**Started:** ⟨YYYY-MM-DD⟩
-**Last updated:** ⟨YYYY-MM-DD⟩ by ⟨agent/owner⟩
+**Masterplan version:** v1.0
+**Status mode:** ⟨exactly `fallback` or `external-export`⟩
+**Canonical task state:** `STATUS.md` | ⟨exact queue path/URL matching workflow binding⟩
+**Exported at:** ⟨external mode: RFC3339 timestamp such as 2026-09-05T10:00:00Z; fallback: N/A⟩
+**Status mapping:** ⟨external mode: semicolon-separated mappings such as Open -> pending; In progress -> claimed; fallback: N/A⟩
 
-**Marker convention:**
-- `[ ]` pending
-- `[x]` done — only with evidence in the note (evidence rule in EXECUTE.md)
-- `[!]` needs rework — set by revise mode when a change invalidated a built milestone; treat as unchecked and rebuild per its note. Never silently uncheck history; `[!]` preserves the fact that it was built once.
+| ID | Status | Claimed by | Updated | Evidence | Blocker/note |
+|---|---|---|---|---|---|
+| `PRJ-001` | pending | — | ⟨timestamp⟩ | `references/evidence/PRJ-001/receipt.md` | — |
+| `PRJ-002` | pending | — | ⟨timestamp⟩ | `references/evidence/PRJ-002/receipt.md` | waits for `PRJ-001` |
 
-## Milestones
-
-- [ ] **M1 — Walking skeleton** — ⟨the thinnest end-to-end slice, from masterplan §18⟩
-  - Note: —
-  - Evidence: —
-- [ ] **M2 — ⟨core feature⟩ slice** — ⟨…⟩
-  - Note: —
-  - Evidence: —
-- [ ] **M⟨n⟩ — …**
-  - Note: —
-  - Evidence: —
-- [ ] **M⟨last⟩ — Full QA pass** — run every acceptance criterion from the masterplan end-to-end and record evidence.
-  - Note: —
-  - Evidence: —
-
-## Blockers
-
-*(none)* — when blocked, record: what, since when, what is needed to unblock, and which milestone it stops.
+Every ID in `references/tickets/INDEX.md` appears exactly once. `done` requires evidence at ticket destination. `needs-rework` preserves prior completion history after revise mode invalidates work. External exports include queue location and export timestamp so offline contract validation remains deterministic; execution still requires queue access.

@@ -16,6 +16,8 @@ Fill the ⟨blanks⟩ and dispatch:
 > - Business: ⟨audience, budget/month, revenue model, fate⟩
 > - Technical decisions: ⟨stack + rationale, data model summary, integrations with prices, deploy target⟩
 > - Reference map: ⟨component → reference → license⟩
+> - Code absorption (when active): ⟨repo locks + path-level license decisions + source→target map + chimera seams + implementation-step linkage; otherwise N/A⟩
+> - Proposed ticket graph: ⟨stable IDs + milestones + dependencies + owned/linked docs + target boundaries + acceptance/validation/evidence/rollback; source pin/license fields when active⟩
 >
 > Review against the five axes below. Report every finding in the exact format given. If you find nothing on an axis, say "clear" — do not invent findings to look thorough, and do not soften real ones to be polite.
 
@@ -25,7 +27,7 @@ Fill the ⟨blanks⟩ and dispatch:
 2. **Consistency** — do any decisions contradict each other? (features that don't fit the budget; a flow referencing a page that doesn't exist; a stack choice that conflicts with the deploy target; acceptance criteria contradicting the data model)
 3. **Feasibility** — is it real? Do the named external APIs exist, at the assumed tier and price? Is the stack proven for this workload? Can the stated budget actually run this?
 4. **Optimization** — is there a meaningfully simpler or cheaper path to the same outcome? (a service instead of a subsystem; one database instead of two; an existing library instead of a custom component)
-5. **Risk** — what is most likely to break a one-shot build midway? (the hardest integration, the vaguest feature, the credential that won't be available, the reference repo that doesn't actually match)
+5. **Risk** — what is most likely to break ticket-by-ticket execution midway? Check local ticket layer fail-closed: every build unit has one stable ID and immutable local contract; catalog and files match; dependencies exist and are acyclic; owned/linked docs resolve; each ticket can execute without loading the whole masterplan; target paths/contracts, exact changes, retained/changed behavior, acceptance, validation commands, evidence destination, and rollback boundary are concrete; canonical status maps 1:1 by ID. When code absorption is active, each affected ticket also names pinned source repo/SHA/paths and compatible license/attribution destination. Any missing execution link is a blocker.
 
 ## Report format
 
@@ -42,7 +44,7 @@ One line per finding, grouped by severity:
 ## Disposition (done by the main agent, after the report)
 
 - **🔴 Blockers** → return to the owning phase (missing aspect → phase 3 or 4; broken feasibility → phase 4; contradiction → wherever it was decided), fix, and update `decisions.md`. **GATE B: the masterplan may not be written while any blocker is open.**
-- **🟡 Improvements** → decide with the user (or apply the "you decide" rule).
+- **🟡 Improvements** → decide with the resolved decision authority (or apply the "you decide" rule).
 - **Everything rejected** — any level — is recorded in masterplan section 20 (Considered and rejected) with the reason, so the executing agent doesn't "fix" a deliberate choice.
 - Save the full report to the package's `references/validation-report.md`.
 

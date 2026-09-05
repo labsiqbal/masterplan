@@ -25,7 +25,7 @@ Only proceed when the user confirms which candidates are actually the relevant c
 
 ## Stage 3 — Deep-dive (only after confirmation)
 
-For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes masterplan §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder.
+For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes masterplan §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder. **For every confirmed open-source candidate that may contribute code, run `code-absorption.md` Stages 1–3 during this deep-dive:** clone it into permitted temporary isolation, pin the inspected commit, perform static repository archaeology, and decide license eligibility per path. Search snippets and landing pages are not deep-dive evidence for code absorption. Stages 4–7 wait for Phase 4, after product decisions are known.
 
 **Also capture the category's UX conventions — the layer above the universal baseline.** `references/ui-baseline.md` is the floor every app shares; the deep-dive is where you learn what *this industry's* users already expect on top of it, so the build feels native to its category rather than generically correct. For the confirmed candidates note:
 
@@ -64,6 +64,8 @@ Deliver the absorption decision before interrogation (phase 3): it changes which
 ## License table
 
 Checked per reference **before** it enters the map. When unsure, learn the pattern, don't copy the code.
+
+**Evidence order — never assume a license.** Acceptable evidence, best first: (1) the `LICENSE` file in the repo itself; (2) the repo/package metadata page (GitHub license badge, npm/PyPI package page); (3) a reputable tracker or the project's official docs. If direct access is blocked, fall down the list and record the method + date in the reference map (e.g. "MIT — npm package page, 2026-09-05"). No evidence at any level = treat as unlicensed: pattern only.
 
 | License family | Examples | Rule |
 |---|---|---|
