@@ -157,7 +157,7 @@ The chimera map: each major component anchored to a proven implementation. Patte
 
 Quality bar for what's worth anchoring to: prefer simple, deep interfaces — small surface, complexity hidden — for long-term maintainability.
 
-When any row absorbs code, link package artifacts produced by `references/code-absorption.md`: pinned repos, path-level license report, source→target records, and (for Assemble) chimera seam contracts. Every such record maps to §18 and one or more stable local ticket contracts.
+When any row absorbs code, link package artifacts produced by `references/code-absorption.md`: pinned repos, tree-map INDEX (the recheck surface), logic analysis, path-level license report, source→target records, and (for Assemble) chimera seam contracts. Every such record maps to §18 and one or more stable local ticket contracts.
 
 ## 15. Design direction
 

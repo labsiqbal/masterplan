@@ -16,7 +16,7 @@ Fill the ⟨blanks⟩ and dispatch:
 > - Business: ⟨audience, budget/month, revenue model, fate⟩
 > - Technical decisions: ⟨stack + rationale, data model summary, integrations with prices, deploy target⟩
 > - Reference map: ⟨component → reference → license⟩
-> - Code absorption (when active): ⟨repo locks + path-level license decisions + source→target map + chimera seams + implementation-step linkage; otherwise N/A⟩
+> - Code absorption (when active): ⟨repo locks + tree-map INDEX + logic analysis + path-level license decisions + source→target map + chimera seams + implementation-step linkage; otherwise N/A⟩
 > - Proposed ticket graph: ⟨stable IDs + milestones + dependencies + owned/linked docs + target boundaries + acceptance/validation/evidence/rollback; source pin/license fields when active⟩
 >
 > Review against the five axes below. Report every finding in the exact format given. If you find nothing on an axis, say "clear" — do not invent findings to look thorough, and do not soften real ones to be polite.

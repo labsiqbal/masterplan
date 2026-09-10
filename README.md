@@ -2,7 +2,7 @@
 
 > *Every decision made before the first line of code.*
 
-An agent skill that turns a product idea — a one-sentence thought or a long messy chat — into a **masterplan package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted.
+An agent skill that turns a product idea, a given repo/product/workflow, or a long messy chat into a **masterplan package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted. Given a readable repo, it maps folders one by one and reconstructs logic before deciding what our version keeps, drops, or changes.
 
 The core is a **portable text pipeline** — plain Markdown, diagrams as hand-authored SVG files (dark tech design system, semantic colors, no rendering library) — that runs on any agent runtime. The finished package carries `masterplan.html`: a self-contained walkthrough render with the SVGs inlined, offline-openable, styled by the product's own design direction.
 
@@ -12,15 +12,16 @@ A six-phase pipeline with three review gates:
 
 ```
 1. Intake + clarification loop ── GATE A: researchable pitch confirmed
-2. Prior-art: quick scan → direction confirmed → deep-dive → absorption map
+   (idea-first or artifact-first)
+2. Research: map the source (or prior art) before any adapt
 3. Product/business interrogation
 4. Technical research + per-component reference map
 5. Validate: fresh red-team agent ── GATE B: zero blockers
 6. Write the package ── GATE C: resolved reviewer approves package
 ```
 
-1. **Intake** — clarifies the idea in conversation until it locks into a confirmed pitch: what it is, who it's for, and the core action.
-2. **Prior-art** — staged research into what already exists, ending in an **absorption map**: how heavily to adopt proven prior art (*fork & adapt*, *assemble*, *differentiate*, or *fresh* — all build outcomes). Confirmed open-source candidates that may contribute code are cloned into temporary isolation, pinned to commits, and statically excavated before any foreign code runs. The one brake: a request resting on a factually false premise stops honestly with an investigation record instead.
+1. **Intake** - clarifies an idea, or a given repo/product/workflow, until it locks into a confirmed pitch: what it is, who it's for, and the core action.
+2. **Research** - map first, adapt later. Idea-first scans 3-5 closest products then deep-dives. Artifact-first deep-dives the given source: pin the repo, walk first-party folders one by one into a tree-map, reconstruct logic, then decide absorption (*fork & adapt*, *assemble*, *differentiate*, or *fresh* - all build outcomes). Confirmed open-source that may contribute code is cloned into temporary isolation and statically excavated before any foreign code runs. The one brake: a request resting on a factually false premise stops honestly with an investigation record instead.
 3. **Interrogation** — asks the user product and business questions (multiple choice, with a "you decide" option on every one), challenging vague or contradicted choices with evidence from the research.
 4. **Technical research** — compares 2–3 genuinely different stacks and recommends one for the resolved decision authority to ratify; decides data model and architecture; verifies external APIs; and completes code-absorption planning: path-level licenses, source→target mappings, every chimera seam, exhaustive implementation steps, validators, provenance, and rollback boundaries.
 5. **Validate** — a fresh agent with no prior context red-teams the decision set before anything is written; blockers must be cleared.
@@ -52,9 +53,13 @@ Copy `skills/masterplan/` into your agent's skill directory. The core skill is p
 
 | System | Location |
 |---|---|
+| Shared canonical | `~/.agents/skills/masterplan/` (symlink to this repo's `skills/masterplan/`) |
 | Claude Code (user) | `~/.claude/skills/masterplan/` |
 | Claude Code (project) | `.claude/skills/masterplan/` |
-| Codex-style CLIs | `~/.codex/skills/masterplan/` |
+| Codex | `~/.codex/skills/masterplan/` |
+| Hermes (user) | `~/.hermes/skills/masterplan/` |
+| Hermes profiles | `~/.hermes/profiles/<name>/skills/masterplan/` |
+| Grok | `~/.grok/skills/masterplan/` |
 | Other runtimes | wherever that runtime discovers `SKILL.md` |
 
 ## Package layout
@@ -75,7 +80,7 @@ masterplan/
             ├── question-bank.md         (interrogation menu)
             ├── validation-rubric.md     (red-team mandate + report format)
             ├── research-playbook.md     (staged prior-art method + license table)
-            ├── code-absorption.md       (clone, archaeology, provenance, fork/chimera planning)
+            ├── code-absorption.md       (clone, folder tree-map, logic, provenance, fork/chimera planning)
             ├── workflow-binding.md      (portable roles, authority, queue, capabilities)
             ├── detail-index-template.md (navigation for large multi-doc packages)
             ├── revise-playbook.md       (change → impact → delta)

@@ -16,6 +16,33 @@ def write(root: Path, relative: str, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
+ABSORPTION_DOCS = (
+    "license-report.md",
+    "absorption-map.md",
+    "source-target-map.md",
+    "receipts/research-validation.md",
+)
+
+
+def absorption_index_rows(*extra: str) -> str:
+    return "\n".join(
+        f"| `absorption/{relative}` | absorption | source | §2/§4 | none | check |"
+        for relative in list(ABSORPTION_DOCS) + list(extra)
+    )
+
+
+def write_source_maps(root: Path, slug: str) -> None:
+    write(root, f"references/absorption/repo-analysis/{slug}.md", f"# {slug}\n")
+    write(
+        root,
+        f"references/absorption/tree-map/{slug}/INDEX.md",
+        "# Tree map\n\n"
+        "| Path | Kind | Role | Card |\n"
+        "|---|---|---|---|\n"
+        "| `.` | first-party | root | - |\n",
+    )
+
+
 def ticket(ticket_id: str, dependencies: str = "none") -> str:
     return f"""# Ticket {ticket_id} — walking skeleton
 
@@ -145,29 +172,21 @@ def test_absorption_contract_and_lock_are_enforced() -> None:
         assert "incomplete code-absorption package" in failed.stdout
         assert "expected non-empty JSON array" in failed.stdout
 
-        for relative in (
-            "license-report.md",
-            "absorption-map.md",
-            "source-target-map.md",
-            "receipts/research-validation.md",
-        ):
+        for relative in ABSORPTION_DOCS:
             write(root, f"references/absorption/{relative}", f"# {relative}\n")
         lock = [{"source_slug": "example", "url": "https://example.test/repo.git", "commit": "abcdef1", "clone_date": "2026-09-05"}]
         write(root, "references/absorption/repo-lock.json", json.dumps(lock))
-        index_rows = "\n".join(
-            f"| `absorption/{relative}` | absorption | source | §2/§4 | none | check |"
-            for relative in (
-                "license-report.md",
-                "absorption-map.md",
-                "source-target-map.md",
-                "receipts/research-validation.md",
-            )
-        )
+        missing_map = run(root)
+        assert missing_map.returncode == 1
+        assert "tree-map/example/INDEX.md" in missing_map.stdout
+        write_source_maps(root, "example")
         write(
             root,
             "references/INDEX.md",
             "# Index\n\n| Document | Scope | Source decisions/evidence | Owning section/milestones | Dependencies | Validator |\n"
-            "|---|---|---|---|---|---|\n" + index_rows + "\n",
+            "|---|---|---|---|---|---|\n"
+            + absorption_index_rows("repo-analysis/example.md", "tree-map/example/INDEX.md")
+            + "\n",
         )
         passed = run(root)
         assert passed.returncode == 0, passed.stdout + passed.stderr
@@ -681,13 +700,9 @@ def test_repo_lock_provenance_fails_closed() -> None:
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         base_package(root)
-        for relative in (
-            "license-report.md",
-            "absorption-map.md",
-            "source-target-map.md",
-            "receipts/research-validation.md",
-        ):
+        for relative in ABSORPTION_DOCS:
             write(root, f"references/absorption/{relative}", f"# {relative}\n")
+        write_source_maps(root, "repo")
         bad_lock = [{
             "source_slug": "repo",
             "url": "https://example.test/repo.git",
@@ -697,20 +712,13 @@ def test_repo_lock_provenance_fails_closed() -> None:
             "submodules": [{"url": "https://example.test/sub.git", "commit": "bad"}],
         }]
         write(root, "references/absorption/repo-lock.json", json.dumps(bad_lock))
-        index_rows = "\n".join(
-            f"| `absorption/{relative}` | absorption | source | §2/§4 | none | check |"
-            for relative in (
-                "license-report.md",
-                "absorption-map.md",
-                "source-target-map.md",
-                "receipts/research-validation.md",
-            )
-        )
         write(
             root,
             "references/INDEX.md",
             "# Index\n\n| Document | Scope | Source decisions/evidence | Owning section/milestones | Dependencies | Validator |\n"
-            "|---|---|---|---|---|---|\n" + index_rows + "\n",
+            "|---|---|---|---|---|---|\n"
+            + absorption_index_rows("repo-analysis/repo.md", "tree-map/repo/INDEX.md")
+            + "\n",
         )
         failed = run(root)
         assert failed.returncode == 1

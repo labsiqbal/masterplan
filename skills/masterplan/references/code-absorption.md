@@ -15,7 +15,12 @@ references/absorption/
 ├── source-target-map.md
 ├── chimera-integration.md       # chimera only
 ├── repo-analysis/
-│   └── <source-slug>.md         # one per inspected repo
+│   └── <source-slug>.md         # logic reconstruction; one per inspected repo
+├── tree-map/
+│   └── <source-slug>/
+│       ├── INDEX.md             # recheck surface: jump to any folder
+│       └── dirs/
+│           └── <dir-slug>.md    # one card per first-party directory
 └── receipts/
     └── research-validation.md
 ```
@@ -36,20 +41,62 @@ Treat foreign repositories as untrusted. Before static audit completes, read fil
 
 ## Stage 2 — Repository archaeology
 
-For every pinned repo, write `repo-analysis/<source-slug>.md` containing:
+Walk the pinned tree **before** interpreting logic, and reconstruct logic **before** any adapt. Overview-only analysis fails this stage.
+
+### 2a — Tree map (folder by folder)
+
+For every pinned repo, write `tree-map/<source-slug>/INDEX.md` and one card per first-party directory under `tree-map/<source-slug>/dirs/`. Recheck later by opening INDEX and jumping to a path. Do not re-walk the repo unless the pin changed.
+
+Walk first-party directories one at a time (root first, then children). Do not skip a first-party directory because it looks unimportant.
+
+List vendor/generated directories on INDEX with kind `vendor` or `generated` and one line of role. Do not walk their contents. Treat as vendor/generated: `.git`, `node_modules`, `vendor`, `dist`, `build`, `coverage`, `.next`, `target`, `__pycache__`, `.venv`, `venv`.
+
+INDEX table:
+
+```text
+| Path | Kind | Role | Card |
+|---|---|---|---|
+| `.` | first-party | repo root | [card](dirs/root.md) |
+| `src/server` | first-party | HTTP API | [card](dirs/src-server.md) |
+| `node_modules` | vendor | dependencies | — |
+```
+
+Each first-party directory card:
+
+```text
+# `<path>`
+
+- **Kind:** first-party | test | docs
+- **Role:** one sentence
+- **Key files:** `file` (what it owns)
+- **Logic here:** what this directory decides or computes
+- **Depends on:** other directories
+- **Depended on by:** other directories
+- **Evidence:** `path` / symbol citations
+```
+
+Dir-card filename: repo-relative path with `/` replaced by `-`; root is `root.md`.
+
+Completion: INDEX lists every walked path; every first-party directory has a card; a reader can recheck any folder from INDEX without listing the repo again.
+
+### 2b — Logic reconstruction
+
+Only after 2a is complete. Write `repo-analysis/<source-slug>.md` containing:
 
 1. identity: URL, SHA, release/tag, activity date;
-3. license evidence and scope, including separately licensed assets, Git LFS objects, and submodules; each absorbed submodule is independently pinned and analyzed;
-3. tree, entrypoints, architecture boundaries, and module dependency graph;
+2. license evidence and scope, including separately licensed assets, Git LFS objects, and submodules; each absorbed submodule is independently pinned and analyzed;
+3. tree-map INDEX link (do not restate the tree), entrypoints, architecture boundaries, and module dependency graph;
 4. runtime/build dependencies and all lifecycle/install hooks;
 5. public APIs, internal contracts, state ownership, persistence model;
-6. relevant modules/files and behavior each implements;
+6. relevant modules/files and behavior each implements, cited to tree-map cards;
 7. upstream tests that prove that behavior;
 8. security-sensitive paths, generated code, native extensions, network calls;
 9. deploy/runtime assumptions;
-10. reusable units, units rejected, and why.
+10. reusable units, units rejected, and why;
+11. primary operations end-to-end: entry → state change → output, cited to tree-map cards and source symbols;
+12. invariants and failure modes.
 
-Completion: every candidate has all ten sections; claims cite source paths and line/symbol names. No overview-only analysis passes.
+Completion: tree-map complete; all twelve sections present; claims cite source paths and line/symbol names. No overview-only analysis passes.
 
 ## Stage 3 — License decision per path
 
@@ -58,6 +105,8 @@ Apply `research-playbook.md` evidence order. `license-report.md` records each so
 No verified license means unlicensed and therefore pattern-only. MIT generally permits use, copying, modification, distribution, sublicensing, and sale, provided copyright and permission notices accompany copies or substantial portions. Preserve required notices in the target's established third-party notice mechanism (or `THIRD_PARTY_NOTICES.md` fallback). Audit assets, fonts, datasets, model weights, submodules, trademarks, and dependencies separately; a repository-level MIT file does not automatically cover them.
 
 ## Stage 4 — Choose absorption unit
+
+Fail closed if Stage 2 tree-map INDEX or logic analysis is missing for the source. Adapt from the map, not from a remembered folder list.
 
 Prefer, in order: existing dependency API; maintained fork; vendored module; selective copy. Copy less code when it preserves the required behavior and maintenance path. Record why the chosen mode beats the earlier modes.
 
@@ -119,6 +168,7 @@ Hundreds of tickets and detail documents are valid when archaeology exposes that
 Before Gate B:
 
 - every code absorption row maps to a pinned SHA;
+- every source_slug has `tree-map/<slug>/INDEX.md` with a Path table and `repo-analysis/<slug>.md`;
 - every copied path has a license decision and notice destination;
 - every target component maps back to source or is explicitly fresh-built;
 - every chimera edge has a seam contract;

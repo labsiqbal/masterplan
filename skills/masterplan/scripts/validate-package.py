@@ -702,6 +702,23 @@ def main(root_arg: str) -> int:
                     for subpos, submodule in enumerate(entry.get("submodules", [])):
                         if not isinstance(submodule, dict) or not submodule.get("url") or not re.fullmatch(r"[0-9a-fA-F]{7,40}", str(submodule.get("commit", ""))):
                             fail(errors, f"repo-lock.json[{pos}].submodules[{subpos}] requires url + commit SHA")
+                for slug in source_slugs:
+                    analysis = absorption / "repo-analysis" / f"{slug}.md"
+                    tree_index = absorption / "tree-map" / slug / "INDEX.md"
+                    if not analysis.is_file():
+                        fail(errors, f"incomplete code-absorption package: references/absorption/repo-analysis/{slug}.md")
+                    if not tree_index.is_file():
+                        fail(errors, f"incomplete code-absorption package: references/absorption/tree-map/{slug}/INDEX.md")
+                    else:
+                        tree_text = tree_index.read_text(encoding="utf-8")
+                        if not table_with_headers(tree_text, {"path"}):
+                            fail(errors, f"tree-map INDEX missing Path table: references/absorption/tree-map/{slug}/INDEX.md")
+                        dirs = absorption / "tree-map" / slug / "dirs"
+                        if dirs.is_dir():
+                            for card in sorted(dirs.glob("*.md")):
+                                rel = card.relative_to(tree_index.parent).as_posix()
+                                if rel not in tree_text and card.name not in tree_text:
+                                    fail(errors, f"tree-map card not listed in INDEX: {card.relative_to(root)}")
             except (json.JSONDecodeError, ValueError) as exc:
                 fail(errors, f"invalid repo-lock.json: {exc}")
 

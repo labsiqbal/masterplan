@@ -1,6 +1,14 @@
 # Research Playbook (prior-art, phase 2)
 
-Research is the most expensive phase — in tokens, time, and attention. The discipline: **spend nothing until the pitch is locked (GATE A), spend little until the direction is confirmed, and only then go deep.** A wrong guess at the scan stage costs a paragraph; a wrong guess at the deep-dive stage costs the whole afternoon.
+Research is the most expensive phase - in tokens, time, and attention. The discipline: **spend nothing until the pitch is locked (GATE A), spend little until the direction is confirmed, and only then go deep.** A wrong guess at the scan stage costs a paragraph; a wrong guess at the deep-dive stage costs the whole afternoon.
+
+## Entry: given source vs idea-first
+
+If Phase 1 locked an **artifact-first** pitch, skip Stages 1-2 as the primary path. Start at Stage 3 on the given source. Map that source before any absorption decision. A cheap 1-2 comparable scan may follow the source map if the owner still needs market context; it must not delay or replace the map.
+
+If the given source is **black-box** (SaaS, video, workflow, no readable repo): reconstruct observed behavior from public docs, UX flows, transcripts, and APIs you can actually see. Pattern-only. Do not run `code-absorption.md`. Do not invent a folder tree.
+
+If **idea-first**, keep Stages 1-4 as written.
 
 ## Stage 1 — Quick scan (cheap)
 
@@ -25,7 +33,7 @@ Only proceed when the user confirms which candidates are actually the relevant c
 
 ## Stage 3 — Deep-dive (only after confirmation)
 
-For the confirmed candidates: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes masterplan §2 (differentiation table), §5–6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder. **For every confirmed open-source candidate that may contribute code, run `code-absorption.md` Stages 1–3 during this deep-dive:** clone it into permitted temporary isolation, pin the inspected commit, perform static repository archaeology, and decide license eligibility per path. Search snippets and landing pages are not deep-dive evidence for code absorption. Stages 4–7 wait for Phase 4, after product decisions are known.
+For the confirmed candidates, or for the given source in artifact-first mode: user flows and page structures (what screens exist, in what order), tech stacks where discoverable, open-source repos (activity, quality, license), pricing models. This material becomes masterplan §2 (differentiation table), §5-6 (flows and pages worth absorbing), and §14 (reference map). Save raw notes to the package's `references/` folder. **For every confirmed open-source candidate that may contribute code, and for a given readable repo, run `code-absorption.md` Stages 1-3 during this deep-dive:** clone into permitted temporary isolation, pin the inspected commit, walk first-party folders one by one into the tree-map, reconstruct logic from that map, then decide license eligibility per path. Search snippets and landing pages are not deep-dive evidence for code absorption. Do not adapt (Stages 4-7) until the tree-map and logic exist. Stages 4-7 wait for Phase 4, after product decisions are known.
 
 **Also capture the category's UX conventions — the layer above the universal baseline.** `references/ui-baseline.md` is the floor every app shares; the deep-dive is where you learn what *this industry's* users already expect on top of it, so the build feels native to its category rather than generically correct. For the confirmed candidates note:
 

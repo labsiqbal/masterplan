@@ -2,7 +2,7 @@
 
 ## What
 
-Agent skill: idea → ticket-executable masterplan package (Markdown contracts + self-contained HTML walkthrough deck).
+Agent skill: idea or given source → ticket-executable masterplan package (Markdown contracts + self-contained HTML walkthrough deck).
 
 ## Open first
 

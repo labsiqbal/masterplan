@@ -1,7 +1,10 @@
 ---
 name: masterplan
-description: "Use when turning product ideas into build-ready plans."
-version: 0.1.0
+description: >
+  Use when turning a product idea, or a given repo/SaaS/workflow, into a
+  build-ready masterplan package. Trigger: /masterplan, plan this product,
+  rebuild this repo, bongkar repo ini, our version of X.
+version: 0.2.0
 author: Hermes
 license: MIT
 metadata:
@@ -12,7 +15,7 @@ metadata:
 
 > **Every decision made before the first line of code.**
 
-Turn a raw product idea into a **masterplan package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template — you are running an investigation that ends in a document where every question is already answered.
+Turn a raw product idea, or a given source (repo, product, workflow), into a **masterplan package**: a folder any capable coding agent can pick up and build end-to-end from a single prompt, with resumable progress if the run is interrupted. The interrogation is thorough so the execution can be one-shot. You are not filling in a template - you are running an investigation that ends in a document where every question is already answered. Given a readable repo, map it folder by folder and reconstruct its logic **before** deciding what our version keeps, drops, or changes.
 
 If the user's request is a change to a project that already has a masterplan package, skip to **Revise mode** at the bottom.
 
@@ -31,7 +34,8 @@ If the user's request is a change to a project that already has a masterplan pac
 
 ## When to use
 
-- The user has a product/app/website idea — clear or vague — and wants it specified for building.
+- The user has a product/app/website idea - clear or vague - and wants it specified for building.
+- The user hands a repo, SaaS, workflow, or video and wants **our** version specified for building (artifact-first).
 - A messy brainstorm chat needs to become an executable plan.
 - An existing masterplan package needs a change (→ Revise mode).
 
@@ -43,7 +47,10 @@ If the user's request is a change to a project that already has a masterplan pac
 
 ```
 1. Intake + clarification loop ── GATE A: researchable pitch confirmed
-2. Prior-art: quick scan → direction confirmed → deep-dive → absorption map
+   (idea-first or artifact-first)
+2. Research: map the source (or prior art) before any adapt
+   idea-first: quick scan → direction → deep-dive → absorption map
+   artifact-first: deep-dive given source (tree-map → logic) → optional comparables → absorption map
 3. Product/business interrogation with evidence-based correction
 4. Technical research + per-component reference map
 5. Validate: fresh red-team agent ── GATE B: zero blockers
@@ -56,15 +63,23 @@ Gates, interrogation, and reviews run in plain conversation on every runtime. Th
 
 ## Phase 1 — Intake + clarification loop
 
-Accept the idea in any form: one sentence, a voice-note transcript, a long contradictory chat dump.
+Accept the idea in any form: one sentence, a voice-note transcript, a long contradictory chat dump, **or a given source** (repo URL, local checkout, SaaS URL, video, workflow).
 
-Before any research, you must be able to write a **researchable pitch** — one paragraph stating:
+**Artifact-first.** If the owner hands a source as the thing to rebuild, that source is the pitch target. Classify it:
+
+- **white-box** (readable repo): Gate A states what the source is, who our version is for, and the core action. Do not invent a different product before mapping the source.
+- **black-box** (no source): Gate A still locks who / what / core action. Phase 2 reconstructs observed behavior only (pattern-only). Do not run `code-absorption.md`.
+- **idea-only**: existing clarification loop below.
+
+A given source is not a shallow target. Cheap read-only inspection *before* Gate A is allowed so the pitch is true. Folder-by-folder mapping is Phase 2, not Phase 1.
+
+Before any expensive research, you must be able to write a **researchable pitch** - one paragraph stating:
 
 1. **What** the thing is,
 2. **who** it is for,
 3. the user's **core action** (the one thing a user does with it).
 
-If you cannot write that paragraph yet, run a **clarification loop** until the shape locks: conversation, model knowledge, and — when the idea attaches to an existing codebase, product, or files — **read-only inspection of that target**. That grounding is cheap and often the fastest way to lock the pitch; it also catches false premises (e.g. "my app has no memory" when it already does) — the one finding that stops a build (Phase 2). Offer directions ("do you mean something like this, or like that?") until the shape is firm. What you hold back here is *online / prior-art* research — the expensive phase (Phase 2's job) — not tools in general; don't spend it on a pitch that may still change tomorrow.
+If you cannot write that paragraph yet, run a **clarification loop** until the shape locks: conversation, model knowledge, and - when the idea attaches to an existing codebase, product, or files - **read-only inspection of that target**. That grounding is cheap and often the fastest way to lock the pitch; it also catches false premises (e.g. "my app has no memory" when it already does) - the one finding that stops a build (Phase 2). Offer directions ("do you mean something like this, or like that?") until the shape is firm. What you hold back here is *online / prior-art* research on a still-unconfirmed pitch - the expensive phase (Phase 2's job) - not tools in general; don't spend it on a pitch that may still change tomorrow.
 
 **Grill, don't transcribe.** Look up facts yourself — never ask the user something the target or your own knowledge can answer; the user's job is decisions, not research. Walk the idea branch by branch instead of firing one blast of questions; every question carries a recommended answer with a one-line reason; and do not move on until shared understanding is explicit. Challenge the premise itself, with evidence: is this the real problem or a symptom of one, and why build it now? A premise that survives the challenge locks stronger; one that doesn't just saved the whole pipeline.
 
@@ -72,14 +87,19 @@ If you cannot write that paragraph yet, run a **clarification loop** until the s
 
 **Delegation mode.** If the user has fully delegated or is away, you may self-confirm and proceed **only toward *less* spend** (e.g. a false-premise stop or a narrower-scope call); mark it provisional/agent-decided so a returning user can correct it. Never self-confirm your way *into* the expensive phases. Exception — the user *explicitly delegates the whole pipeline* ("run it, bring me the package"): every gate may then be self-confirmed, each marked `provisional / agent-decided`, and all provisional decisions batch into one review at Gate C. The adaptive rule from `references/question-bank.md` governs the questions: after "you decide" ≥3× in a row, decide the rest yourself and list every agent decision at Gate C. Full delegation never stalls the pipeline.
 
-## Phase 2 — Prior-art research + absorption map
+## Phase 2 — Research + absorption map
 
-Follow `references/research-playbook.md`. Staged, so waste stays cheap:
+Follow `references/research-playbook.md`. Map first, adapt later. Do not write keep/drop/invert decisions until the source (or confirmed prior art) is mapped.
 
-1. **Quick scan** — identify the 3–5 existing products/projects closest to the pitch.
-2. **Direction check** — present them: "your idea resembles X and Y; their flow works like this — is that what you have in mind?" Classify each divergence: deliberate differentiation, or the user simply didn't know the proven pattern? This is the adversarial read of the scan — name what the user is reinventing unknowingly, plainly, and resolve each case into a decision.
-3. **Deep-dive** — only after the resolved decision authority confirms direction: flows, page structures, tech stacks, open-source availability, licenses.
-4. **Absorption map** — the standing assumption is *we are building*; the question is **what proven prior art do we absorb, and how heavily?** Pick the level on the adoption ladder (all are BUILD outcomes):
+**Artifact-first (given source).** Skip the 3-5 scan as the primary path. Deep-dive the given source first. For a readable repo, run `references/code-absorption.md` Stages 1-3: pin, walk folders one by one into a tree-map, reconstruct logic from that map, then license. Optional 1-2 comparables may follow the map if divergence needs market context; they must not replace it.
+
+**Idea-first.** Staged, so waste stays cheap:
+
+1. **Quick scan** - identify the 3-5 existing products/projects closest to the pitch.
+2. **Direction check** - present them: "your idea resembles X and Y; their flow works like this - is that what you have in mind?" Classify each divergence: deliberate differentiation, or the user simply didn't know the proven pattern? This is the adversarial read of the scan - name what the user is reinventing unknowingly, plainly, and resolve each case into a decision.
+3. **Deep-dive** - only after the resolved decision authority confirms direction: flows, page structures, tech stacks, open-source availability, licenses. Confirmed OSS that may contribute code takes the same tree-map → logic path in `code-absorption.md`.
+
+**Absorption map** (both entries) - the standing assumption is *we are building*; the question is **what proven prior art do we absorb, and how heavily?** Pick the level on the adoption ladder (all are BUILD outcomes):
 
 | Absorption level | Meaning |
 |---|---|
@@ -94,7 +114,7 @@ Two absorption currencies, one rule: **patterns and ideas** (flows, UX, architec
 
 ## Phase 3 — Product/business interrogation
 
-Ask the resolved decision authority **only product and business questions** — audience, features and their behavior, monthly budget for infrastructure/APIs, design taste, day-one content, and the product's fate (open source / commercial / internal). Aim for about a dozen questions, not sixty — unless the project is large: then ask as many as completeness needs, still one at a time, still with recommendations. Draw from `references/question-bank.md` and let answers eliminate later questions. Run the interrogation in conversation: multiple choice where the answer space allows, one question per turn, recommended option marked, "you decide" hatch on every one.
+Ask the resolved decision authority **only product and business questions** - audience, features and their behavior, monthly budget for infrastructure/APIs, design taste, day-one content, and the product's fate (open source / commercial / internal). After an artifact-first map, the load-bearing questions are keep / drop / invert against that map and logic, not against a marketing summary. Aim for about a dozen questions, not sixty - unless the project is large: then ask as many as completeness needs, still one at a time, still with recommendations. Draw from `references/question-bank.md` and let answers eliminate later questions. Run the interrogation in conversation: multiple choice where the answer space allows, one question per turn, recommended option marked, "you decide" hatch on every one.
 
 Hold the adversarial stance here, not just at validation — the grilling rules from Phase 1 still apply (facts looked up yourself, decisions belong to the resolved decision authority, branch by branch, recommended answers). Challenge feature bloat ("what breaks if v1 ships without this?"), vague flows, and unjustified scope — with evidence, not opinion. The user may describe the flows they want in their own words. Correct with evidence: "the flow you describe conflicts with how users behave in X, Y, Z — all of them do it this way because ⟨reason⟩. Deliberate difference, or adopt the proven pattern?" Every disagreement resolves into a recorded decision — never an objection left hanging.
 
@@ -112,7 +132,7 @@ You make the technical decisions, verify them against reality, and **question th
 - **When making technical decisions, do not give much weight to development cost; instead prefer quality, simplicity, robustness, scalability, and long-term maintainability.** This governs the stack comparison, architecture, data model, and reference map — the cheaper-to-build option does not win by being cheaper.
 - **Design the stack twice; the resolved decision authority decides.** Generate 2–3 genuinely different viable stacks — via parallel sub-agents where available, so they are really different, not one idea reskinned. **Fallback — no subagent support:** generate the options yourself in deliberately separate passes (a different architecture family per pass, no peeking back), and record the single-designer-bias caveat in `references/decisions.md`: options from one head are weaker evidence than from two. Compare them on product-framed axes weighted by the values above (quality, scalability, maintainability, ecosystem/lock-in — not raw dev cost), give one opinionated recommendation, and put the call to the resolved decision authority with the standard "you decide" hatch (which returns it to your recommendation). §10 records the one chosen stack; runner-up rationale lands in §20 so the executor doesn't second-guess it. Design-it-twice applies to the **stack and the architecture** — not to every decision; per-decision option generation bloats the process.
 - **Verify external APIs are alive** and check current pricing against the stated budget. A masterplan naming a dead API or an unaffordable tier fails at execution time.
-- **Build the per-component reference map:** anchor each major component to a proven implementation — "video timeline → adapt pattern from repo X (MIT)"; "chat streaming → proven in repo Y." Check licenses so no incompatible code (e.g. GPL into a closed-source product) gets absorbed; see the license table and its evidence order in `references/research-playbook.md` — never guess a license from the project's name or vibe. If Phase 2 selected **Fork & adapt**, **Assemble (chimera)**, or any row says `Code — adapt`, complete `references/code-absorption.md` Stages 4–7 in Phase 4, building on the pinned clones, archaeology, and license decisions produced by its Stages 1–3 during Phase 2. Choose absorption units, build source→target maps and chimera seam contracts, then derive exhaustive implementation steps.
+- **Build the per-component reference map:** anchor each major component to a proven implementation - "video timeline → adapt pattern from repo X (MIT)"; "chat streaming → proven in repo Y." Check licenses so no incompatible code (e.g. GPL into a closed-source product) gets absorbed; see the license table and its evidence order in `references/research-playbook.md` - never guess a license from the project's name or vibe. If Phase 2 selected **Fork & adapt**, **Assemble (chimera)**, or any row says `Code — adapt`, complete `references/code-absorption.md` Stages 4-7 in Phase 4, building on the pinned clones, tree-map, logic reconstruction, and license decisions from Stages 1-3. Stages 4-7 fail closed if the tree-map INDEX or logic analysis is missing. Choose absorption units, build source→target maps and chimera seam contracts, then derive exhaustive implementation steps.
 - **Decide the testing strategy:** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. State what must be covered (the §4 acceptance criteria and primary flows) and map it into §18 plus each owning ticket's acceptance criteria and validation commands.
 
 Where a visual helps review, present the architecture and data model SVG diagrams inline (rendered from `references/diagrams/`); the component + license map presents as a table.
@@ -174,6 +194,8 @@ The pipeline itself must survive interruption, mirroring what it preaches. Creat
 ⟨the confirmed pitch paragraph⟩
 
 ## Phase 2 — Absorption map
+⟨entry: idea-first | artifact-first + source⟩
+⟨tree-map path + logic analysis path, or N/A for idea-only / black-box⟩
 ⟨absorption level + the one difference + scan summary⟩
 
 ## Phase 3 — Product decisions
