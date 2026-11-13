@@ -1,4 +1,7 @@
 # Map - masterplan
+Project facts: [context.md](context.md); generic procedure: workspace methods/task-loop.md. Installed skill/validator remain native source.
+
+Source maintenance versus planning use: [CONTEXT.md](CONTEXT.md).
 
 ## Purpose
 
