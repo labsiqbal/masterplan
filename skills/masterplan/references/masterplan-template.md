@@ -201,6 +201,8 @@ Prevents functionally-correct-but-generic output:
 - **Must NOT look like:** ⟨the failure mode — e.g. "a default component-library dashboard with stock gradients"⟩.
 - **Industry UX conventions (from phase-2 research):** the table-stakes patterns this product's *category* expects, cited from the deep-dive — "products X and Y in this space all do ⟨pattern⟩, so we adopt it" (e.g. fintech → transaction confirmations + audit trail; SaaS dashboard → filters/saved views/bulk actions; consumer → onboarding coach + rich empty states). List which the build adopts and any it deliberately drops (→ §20). This is the layer *above* the universal `references/ui-baseline.md` floor — it makes the product feel native to its industry, not just generically correct.
 
+- **Tokens per theme:** background, surface, text, muted text, accent, text-on-accent, and a control border, for every theme the product ships (light and dark). Each pairing meets `references/ui-baseline.md` contrast (4.5:1 text, 3:1 control borders and large text); state the measured ratios.
+
 This section covers **taste** (what it should feel like). The **mechanics** — interaction states, empty/error handling, keyboard, responsive, motion — are the non-negotiable floor in `references/ui-baseline.md` and are not re-decided here. Design direction sets the bar *above* that floor. EXECUTE.md's design-stack rule tells the executing agent which design skills to engage to hit this bar — this section is enforced at build time, not advisory. It also drives the look of the HTML walkthrough artifact (`references/html-export.md`), so the deck previews the product faithfully.
 
 ## 16. Content & seed data
@@ -236,6 +238,8 @@ flowchart TD
 | `M9` — Full QA | Every §4 criterion and required UI baseline check evidenced | `PRJ-999` | all feature tickets |
 
 **Ticket graph:** [ticket catalog](references/tickets/INDEX.md) is deterministic graph truth. Every catalog ticket appears once in §18 table with matching milestone; §18 contains no unknown IDs. Generate the build-order diagram from this validated catalog graph; the diagram is a view, never independent graph data.
+
+**Browser QA (UI products):** the full-QA ticket runs the end-to-end suite in a full browser channel too (bundled headless shells skip real requests such as `/favicon.ico`), and its console-error guard names which messages are expected, e.g. the browser's own log line for an intentional 404/409/422 document.
 
 **Testing strategy (decided in phase 4):** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. Each ticket lands with tests for its mapped §4 acceptance criteria. Full QA ticket verifies every criterion, required primary flow, and — for UI projects — `references/ui-baseline.md` with evidence.
 

@@ -164,6 +164,7 @@ masterplan-<slug>/
    - **Placeholders**: no "TBD", "TODO", or vague requirement anywhere.
    - **Consistency**: no section contradicts another; the build order covers every feature; every feature has acceptance criteria.
    - **Ambiguity**: a requirement readable two ways gets one explicit reading.
+   - **Copy**: every user-visible string has a defined text, including accessible names, error reasons, and CLI messages.
    - **Diagrams**: every visually followed flow has one and passes the checks in `references/diagrams.md`: syntax, coverage, and a screenshot read at both widths; record method and outcome in `references/decisions.md`.
 
 **GATE C — The resolved final reviewer approves the package.** Present `masterplan.html` as the review surface, walk the load-bearing decisions briefly, and revise until approved. Under full delegation, every `provisional / agent-decided` decision gets its one batch review here.
