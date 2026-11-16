@@ -4,7 +4,7 @@ Copy this structure into the package's `masterplan.md` and fill every section. *
 
 **Decisions in prose, not artifacts that go stale.** Record decisions as prose and contracts, not brittle file paths or implementation snippets that rot the moment the executor names things differently. One deliberate exception: a snippet that *encodes a decision* — a state machine, reducer, schema, or type shape — may be inlined, trimmed to its decision-rich part (§7's schema is exactly this).
 
-**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a diagram, not just prose. Diagrams are **Mermaid fenced blocks** inline in the section they illustrate; diagram type per section, color classes, and verification live in `references/diagrams.md`. The sections below marked **[diagram]** must carry one: §5 user flows, §7 data model, §8 multi-actor/async endpoints, §11 architecture, §18 build order. Add more wherever a flow, state machine, or relationship is easier seen than read. The same node kind gets the same color class in every diagram of the package.
+**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a diagram, not just prose. Diagrams are **Mermaid fenced blocks** inline in the section they illustrate; diagram type per section, color classes, and verification live in `references/diagrams.md`. The sections below marked **[diagram]** must carry one: §5 user flows (one per primary flow), §7 data model, §11 architecture, §18 build order. §8 carries a sequence diagram only for an endpoint that is multi-actor or async; without one, it carries none. Add more wherever a flow, state machine, or relationship is easier seen than read. The same node kind gets the same color class in every diagram of the package.
 
 ---
 
@@ -104,7 +104,7 @@ CREATE TABLE items (
 
 If the product has no persistent data, state that and why.
 
-## 8. API contracts
+## 8. API contracts **[diagram if multi-actor/async]**
 
 Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add a Mermaid `sequenceDiagram` showing who calls whom in what order:
 
@@ -157,7 +157,7 @@ How the pieces connect — a short prose description plus a Mermaid `flowchart` 
 
 ````
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph Browser
     ui[Web app]:::entry
   end

@@ -20,7 +20,7 @@ The pipeline survives interruption the way the package it writes does. Create th
 ⟨blockers → resolutions; improvements decided; rejected suggestions → §20; or "skipped by authority: tiny scope"⟩
 
 ## Phase 6 — Package written + self-review
-⟨files written (incl. detail docs); placeholder scan, consistency, diagram verification method + outcome (renderer or HAND-SVG), HTML check; Gate C approval⟩
+⟨files written (incl. detail docs); placeholder scan (name the scanned words in backticks so the validator skips them), consistency, diagram verification method + outcome (renderer or HAND-SVG), deck build + screenshot check; Gate C approval⟩
 ```
 
 On session start with a partial package: read this file, state which phase you are resuming, and continue from the first incomplete phase without re-interviewing.

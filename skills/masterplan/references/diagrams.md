@@ -8,11 +8,13 @@ Every diagram is a **Mermaid fenced block** (` ```mermaid `) inline in the Markd
 |---|---|---|
 | §5 user flows | `flowchart LR` | screens/actions as nodes, transitions as labelled edges; one block per primary flow; entry node `entry`, success end-state `ok` |
 | §7 data model | `erDiagram` | every table with fields (`PK`/`FK` marked), relations with cardinality |
-| §8 multi-actor or async endpoints | `sequenceDiagram` | actors as participants, calls top-to-bottom, async calls as `-)` |
-| §11 architecture | `flowchart` + `subgraph` | one subgraph per boundary of what runs where (browser / host / region), components inside |
+| §8, only for a multi-actor or async endpoint | `sequenceDiagram` | actors as participants, calls top-to-bottom, async calls as `-)`; validate before any write in the sequence |
+| §11 architecture | `flowchart TB` + `subgraph` | one subgraph per boundary of what runs where (browser / host / region), components inside |
 | §18 build order | `flowchart TD` | one node per milestone, edges = blocking dependencies, generated from the validated ticket catalog; independent slices visibly parallel; no cap on milestone count |
 
-Add a diagram anywhere else a flow, state machine, or relationship reads faster than prose (`stateDiagram-v2` for lifecycles). Name a block with Mermaid frontmatter when the section has several:
+Add a diagram anywhere else a flow, state machine, or relationship reads faster than prose (`stateDiagram-v2` for lifecycles).
+
+**Width budget.** The deck column is about 900px wide and phones are 390px. Keep a `flowchart LR` to at most 6 nodes in its longest row; split a longer flow into several charts or use `TB`. Keep node labels under about 30 characters, and let the frontmatter `title` be the only caption. Name a block with Mermaid frontmatter when the section has several:
 
 ````markdown
 ```mermaid
@@ -28,7 +30,7 @@ flowchart LR
 
 ## Semantic color map
 
-Flowcharts declare these as `classDef` lines; the same kind of node gets the same class in every diagram of the package. Other diagram types keep the theme defaults.
+`render-diagrams.py` applies a dark base theme in the same palette. Flowcharts declare these as `classDef` lines; the same kind of node gets the same class in every diagram of the package. Other diagram types keep the theme defaults.
 
 | Class | Component type | Fill | Stroke |
 |---|---|---|---|
@@ -45,9 +47,9 @@ Text color `#e2e8f0` on every class. Datastores use the cylinder shape `[(name)]
 
 1. **Syntax:** `scripts/validate-package.py` fails any Mermaid block that is unclosed, empty, or lacks a known diagram type. `scripts/render-diagrams.py` is the full parser: a block that fails to render is broken.
 2. **Coverage:** every node, actor, or table the section names appears in its block; check by grepping the block for each name.
-3. **Render:** open the rendered SVGs inside `masterplan.html` and confirm labels and edges are visible.
+3. **Look:** build the deck and read its screenshots at desktop and phone width (`references/html-export.md` step 4). Most diagram defects are visual (unreadable width, clipped nodes, wrapped labels) and only a screenshot catches them.
 
-Record method + outcome in `references/decisions.md` (Phase 6 block). A diagram counts as valid only after these checks, never by eye alone.
+Record method + outcome in `references/decisions.md` (Phase 6 block). A diagram counts as valid only after all three checks.
 
 ## Rendering for the deck
 
@@ -61,6 +63,6 @@ Only when the renderer is unavailable, write each deck SVG by hand at the same p
 - Background slate-950 `#020617` with a 40px grid (`stroke="#1e293b"`, `stroke-width="0.5"`); `font-family="'JetBrains Mono', monospace"`; 12px names, 9px sublabels.
 - Rounded rects `rx="6"`, 1.5px stroke, colors from the map above; opaque `#0f172a` rect under each semi-transparent one so arrows never show through.
 - Arrows drawn right after the grid, arrowheads via `<marker>`; dashed `4,4` for async/security, `8,4` for boundaries.
-- Must parse as XML (the validator checks every `references/diagrams/*.svg`) and name every node its block names.
+- Must parse as XML (the validator checks every `references/diagrams/*.svg`), name every node its block names, and use ids prefixed with the file name so inlined SVGs never collide.
 
 Record `HAND-SVG` and the reason in the Phase 6 block of `references/decisions.md`. The package is never blocked on diagram tooling.

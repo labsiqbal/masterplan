@@ -1,25 +1,32 @@
 # HTML Export Playbook
 
-The package doubles as a **presentation**. `masterplan.html` is a self-contained render of `masterplan.md`: one file, no build step, no external tooling, opens offline in any browser.
+The package doubles as a **presentation**. `masterplan.html` is a self-contained render of the package: one file, opens offline from `file://` in any browser.
 
 - `masterplan.md` → `masterplan.html`
 - `VERDICT.md` → `VERDICT.html` (same treatment, on a false-premise stop)
 
-The Markdown stays the single source of truth — the HTML is a render of it, regenerated whenever it changes (revise mode step 6). Never hand-edit the export as the master.
+The Markdown stays the single source of truth. The HTML is a build output, regenerated from scratch whenever the Markdown changes (revise mode included); never hand-edit it.
 
 ## How to produce it
 
-Write the HTML directly — it is a document, not a build:
+1. **Theme from §15 Design direction.** Write `references/deck-theme.css`: a `:root{…}` block overriding the deck's custom properties (`--bg`, `--surface`, `--text`, `--muted`, `--accent`, `--border`, `--code`, `--font`, `--mono`) with the palette and typography §15 decided, so the deck previews the product's own look. Inline CSS only: no `@import`, no remote `url()`. Check text contrast against `--bg` and `--surface`.
+2. **Render the diagrams.** `python3 <skill>/scripts/render-diagrams.py <package>` (`references/diagrams.md`).
+3. **Build.** `python3 <skill>/scripts/build-deck.py <package>`. It renders the source document plus every package document under `references/` (evidence excluded) into one file with a hierarchical table of contents (masterplan sections, then documents by folder), turns local `.md` links into in-deck anchors, inlines each rendered SVG where its Mermaid block sits, and embeds local images. Exit 1 names what is wrong: a missing render, duplicate SVG ids, or an external request. Fix the source and rebuild until it prints `PASS: deck built`.
+4. **Look at it.** Screenshot the deck at desktop and phone width and read the screenshots: every diagram legible without zoom, no clipped nodes, tables readable, nothing overflowing the page.
 
-1. **Render the diagrams, then inline them.** Run `scripts/render-diagrams.py <package>` (`references/diagrams.md`); each Mermaid block becomes `references/diagrams/<name>.svg`. Put each SVG's `<svg>…</svg>` markup where its block sits in the section. All CSS goes in one `<style>` block. No external requests of any kind — the file must open from `file://` with no network and render everything.
-2. **Style from §15 Design direction.** The deck previews the product's own look: mood words, palette, typography from the masterplan's design section. Not a generic theme. Keep it readable: one section per screen block, sticky nav of section links, code blocks monospaced. Dark surface suits the rendered diagrams' dark theme — check contrast either way.
-3. **Structure mirrors the masterplan.** One top-level `<section id="s1">`…`<section id="sN">` per masterplan section, in order. Build a hierarchical table of contents: section → epic/module → linked detail document; do not flatten hundreds of documents into one list. Inline each detail document beneath its owning section or link it from that subsection, matching `references/INDEX.md`. A reader reaches every detail without searching the filesystem.
-4. **Verify after writing:** open the file (browser or `python3 -m http.server` locally), confirm every section renders, every inlined SVG paints (a missing paste shows as empty space — fix and regenerate), tables are readable, zero network requests (check devtools Network tab or grep the file for `http` src/href outside anchor links and `xmlns` namespaces). Record the check in `references/decisions.md` (Phase 6 block).
+   ```bash
+   for size in 1280,900 390,844; do
+     google-chrome --headless --no-sandbox --hide-scrollbars --window-size=$size \
+       --screenshot=deck-${size%%,*}.png "file://$PWD/masterplan.html"
+   done
+   ```
+
+   To see every diagram at once, screenshot a copy with `section.block>:not(figure.diagram){display:none}nav{display:none}.layout{display:block}` appended to its `<style>`. A visual defect goes back to the Mermaid source (split the chart, switch direction), then re-render and rebuild. Record the check in `references/decisions.md` (Phase 6 block).
 
 ## Review use
 
-During Gate C, hand the user the HTML file path — they open it, read, and give feedback in conversation. Revise the Markdown sources, re-render the diagrams, regenerate the HTML, repeat until approved. The deck is regenerated from scratch each time; there is no incremental edit.
+During Gate C, hand the reviewer the HTML file path; they read it and give feedback in conversation. Revise the Markdown, re-render, rebuild, repeat until approved.
 
-## Without a browser
+## Without a browser or Python
 
-The text package is complete on its own. If the HTML genuinely cannot be verified in the runtime, say so honestly and ship the Markdown with its Mermaid blocks — never hand-roll a fake deck you could not open.
+The text package is complete on its own. If the deck genuinely cannot be built or viewed in this runtime, say so honestly and ship the Markdown with its Mermaid blocks; never hand-roll a deck you could not open.

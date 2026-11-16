@@ -49,7 +49,7 @@ When a project that already has a package needs a change, the skill runs only th
 
 ## Install
 
-Copy `skills/masterplan/` into your agent's skill directory. The core skill is plain English with no engine-specific dependencies — the text pipeline completes on any runtime. The HTML walkthrough deck is authored by the agent (single file, inline CSS, diagrams inlined as SVG). `scripts/render-diagrams.py` renders the Mermaid blocks with mermaid-cli (via `mmdc` or `npx`); without Node, the agent hand-authors the deck SVGs instead.
+Copy `skills/masterplan/` into your agent's skill directory. The core skill is plain English with no engine-specific dependencies — the text pipeline completes on any runtime. The HTML walkthrough deck is built by `scripts/build-deck.py` (Python stdlib, single file, inline CSS, theme from the product's design direction). `scripts/render-diagrams.py` renders the Mermaid blocks with mermaid-cli (via `mmdc` or `npx`); without Node, the agent hand-authors the deck SVGs instead.
 
 | System | Location |
 |---|---|
@@ -90,7 +90,8 @@ masterplan/
             └── html-export.md           (self-contained HTML walkthrough deck)
         └── scripts/
             ├── validate-package.py      (deterministic package validator)
-            └── render-diagrams.py       (Mermaid blocks → deck SVGs)
+            ├── render-diagrams.py       (Mermaid blocks → deck SVGs)
+            └── build-deck.py            (package → self-contained masterplan.html)
 ```
 
 ## License

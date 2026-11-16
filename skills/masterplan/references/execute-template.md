@@ -15,7 +15,7 @@ Build this project one ticket at a time.
 3. **Load bounded context.** Read claimed `references/tickets/<ID>.md` plus its owned and linked docs. This is sufficient execution context. Do not read all of `masterplan.md` unless ticket links a required section or a contradiction demands revise mode.
 4. **Honor boundary.** Change only ticket target paths/contracts; preserve its retained behavior. Local ticket contract and global decisions are immutable during execution. A contradiction, impossibility, or scope request enters masterplan revise mode; executor does not alter global decisions.
 5. **Authority and credentials.** Follow workflow binding. Never invent keys or evidence. Ask resolved decision authority when required authority or credentials are absent.
-6. **Validate and evidence.** Run every ticket validation command. Write actual output/artifacts to expected evidence destination. Mark `done` only when acceptance criteria pass and evidence exists. Otherwise mark `blocked` with exact reason, or roll back within ticket boundary.
+6. **Validate and evidence.** Run every ticket validation command. Write actual output/artifacts to expected evidence destination, which is inside this package even when code lives in a separate repository. Mark `done` only when acceptance criteria pass and evidence exists. Otherwise mark `blocked` with exact reason, or roll back within ticket boundary.
 7. **Design and interaction.** UI tickets follow masterplan §15 plus `references/ui-baseline.md`. Engage available frontend craft and motion skills before frontend implementation; use same discipline manually when unavailable.
 8. **Continue.** Release claim, refresh canonical state/export, then claim next ready ticket. Never keep mutable status in ticket files.
 

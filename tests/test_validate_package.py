@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "skills/masterplan/scripts/validate-package.py"
 RENDERER = ROOT / "skills/masterplan/scripts/render-diagrams.py"
+DECK = ROOT / "skills/masterplan/scripts/build-deck.py"
 
 
 def write(root: Path, relative: str, content: str) -> None:
@@ -780,6 +781,62 @@ def test_render_plan_names_svgs_by_section() -> None:
         assert "references/flows/checkout.md:3 -> references/diagrams/references-flows-checkout-1.svg" in result.stdout, result.stdout
 
 
+def test_anchor_links_must_match_a_heading() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        original = (root / "masterplan.md").read_text(encoding="utf-8")
+        write(root, "masterplan.md", original + "\nSee [build order](#18-build-order) and [arch](masterplan.md#11-architecture).\n")
+        passed = run(root)
+        assert passed.returncode == 0, passed.stdout + passed.stderr
+        write(root, "references/tickets/MP-001.md", ticket("MP-001").replace(
+            "[Workflow binding](../workflow-binding.md)", "[Data model](../../masterplan.md#7-data-modl)"))
+        failed = run(root)
+        assert failed.returncode == 1, failed.stdout
+        assert "broken anchor: references/tickets/MP-001.md -> ../../masterplan.md#7-data-modl" in failed.stdout, failed.stdout
+
+
+def test_placeholder_words_in_backticks_are_allowed() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        write(root, "references/decisions.md", "# Decisions\n\nPlaceholder scan for `TBD`, `TODO`, `FIXME`: none found.\n")
+        passed = run(root)
+        assert passed.returncode == 0, passed.stdout + passed.stderr
+        write(root, "references/decisions.md", "# Decisions\n\nAuth flow TBD.\n")
+        failed = run(root)
+        assert failed.returncode == 1 and "placeholder" in failed.stdout, failed.stdout
+
+
+def test_deck_builder_inlines_renders_and_rewrites_links() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        original = (root / "masterplan.md").read_text(encoding="utf-8")
+        write(root, "masterplan.md", original + "\n**Acceptance criteria:**\n- [ ] saves a link\n- [x] lists links\n\n"
+              "Contract: [MP-001](references/tickets/MP-001.md), [arch](#11-architecture).\n")
+        build = lambda: subprocess.run(["python3", str(DECK), str(root)], check=False, capture_output=True, text=True)
+
+        missing = build()
+        assert missing.returncode == 1 and "missing diagram render references/diagrams/s11-1.svg" in missing.stdout, missing.stdout
+
+        svg = '<svg xmlns="http://www.w3.org/2000/svg" id="{0}"><defs><marker id="{0}-arrow"/></defs><text>Browser</text></svg>'
+        write(root, "references/diagrams/s11-1.svg", svg.format("s11-1"))
+        built = build()
+        assert built.returncode == 0, built.stdout + built.stderr
+        page = (root / "masterplan.html").read_text(encoding="utf-8")
+        assert '<figure class="diagram"><svg' in page and "s11-1-arrow" in page
+        assert '<li class="task"><input type="checkbox" disabled aria-label="done"> saves a link</li>' in page, page
+        assert 'href="#references-tickets-mp-001"' in page and 'id="references-tickets-mp-001"' in page
+        assert 'href="#mp--11-architecture"' in page and 'id="mp--11-architecture"' in page
+        assert "http" not in page.replace("http://www.w3.org/2000/svg", "")
+
+        write(root, "references/diagrams/architecture.svg", svg.format("s11-1"))
+        write(root, "masterplan.md", original + "\n![old](references/diagrams/architecture.svg)\n")
+        clash = build()
+        assert clash.returncode == 1 and "also used by" in clash.stdout, clash.stdout
+
+
 if __name__ == "__main__":
     test_base_passes()
     test_orphan_detail_fails_then_index_passes()
@@ -809,4 +866,7 @@ if __name__ == "__main__":
     test_repo_lock_provenance_fails_closed()
     test_mermaid_blocks_need_known_type_and_closing_fence()
     test_render_plan_names_svgs_by_section()
+    test_anchor_links_must_match_a_heading()
+    test_placeholder_words_in_backticks_are_allowed()
+    test_deck_builder_inlines_renders_and_rewrites_links()
     print("PASS: validate-package tests")

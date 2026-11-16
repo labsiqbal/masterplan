@@ -25,6 +25,33 @@ from pathlib import Path
 MERMAID_CLI = "@mermaid-js/mermaid-cli@11.4.2"
 BROWSERS = ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser")
 SECTION = re.compile(r"^##\s+(\d+)\.")
+THEME = {
+    "theme": "base",
+    "themeVariables": {
+        "darkMode": True,
+        "background": "#0f172a",
+        "fontFamily": "system-ui, -apple-system, Segoe UI, sans-serif",
+        "primaryColor": "#1e293b",
+        "primaryTextColor": "#e2e8f0",
+        "primaryBorderColor": "#64748b",
+        "secondaryColor": "#1e293b",
+        "tertiaryColor": "#0b1222",
+        "lineColor": "#94a3b8",
+        "textColor": "#e2e8f0",
+        "edgeLabelBackground": "#0f172a",
+        "clusterBkg": "#111c33",
+        "clusterBorder": "#334155",
+        "titleColor": "#e2e8f0",
+        "actorBkg": "#1e293b",
+        "actorBorder": "#64748b",
+        "actorTextColor": "#e2e8f0",
+        "signalColor": "#cbd5e1",
+        "signalTextColor": "#e2e8f0",
+        "labelBoxBkgColor": "#1e293b",
+        "noteBkgColor": "#1e293b",
+        "noteTextColor": "#e2e8f0",
+    },
+}
 
 
 def load_validator():
@@ -94,12 +121,14 @@ def main(argv: list[str]) -> int:
     with tempfile.TemporaryDirectory() as scratch:
         config = Path(scratch) / "puppeteer.json"
         config.write_text(json.dumps({"args": ["--no-sandbox"]}), encoding="utf-8")
+        theme = Path(scratch) / "mermaid.json"
+        theme.write_text(json.dumps(THEME), encoding="utf-8")
         for doc, line, text, target in jobs:
             source = Path(scratch) / "diagram.mmd"
             source.write_text(text, encoding="utf-8")
             target.parent.mkdir(parents=True, exist_ok=True)
             result = subprocess.run(
-                [*command, "-i", str(source), "-o", str(target), "-t", "dark", "-b", "transparent", "-p", str(config)],
+                [*command, "-i", str(source), "-o", str(target), "-I", target.stem, "-c", str(theme), "-b", "transparent", "-p", str(config)],
                 env=env,
                 capture_output=True,
                 text=True,

@@ -46,6 +46,8 @@ Labels are parser-facing. Keep each field on one line; link longer detail docs r
 - **Status:** Tracked by canonical task state under `PRJ-002`; initial status `pending`.
 ```
 
+Owned and linked docs may be masterplan section anchors (`../../masterplan.md#6-pages--screens`), which suits a small package with no detail docs; the validator checks every `#anchor` against the target's headings. Evidence always lives in the package under `references/evidence/<ID>/`, even when the product's code lives in a separate repository.
+
 Fields may say `N/A — <reason>` only where template permits. Source provenance is all-or-none: when repository is N/A, commit, source paths, and license/attribution are also N/A; otherwise repository is an `http`/`https` URL, commit is a 7–40 hex SHA, and source paths plus attribution are actionable. Validation commands contain one or more inline-code commands. Evidence destination is one exact package-relative regular-file path under `references/evidence/<ID>/`, never URL, absolute, or traversal. Rollback boundary names concrete backticked target paths or an explicit backticked `state:<identifier>` / `transaction:<identifier>`. Status declaration uses template sentence exactly; mutable current status never enters contract.
 
 ## Queue adapter/export mapping
