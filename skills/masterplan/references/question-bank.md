@@ -4,7 +4,7 @@ A **menu, not a script**. Phase 1 uses only what the idea dump leaves unclear; a
 
 > **You decide** — make the call and record your rationale in the masterplan.
 
-Choosing it is a real answer: decide yourself, write the decision into the masterplan as an agent decision with rationale, and move on.
+Choosing it is a real answer: decide yourself, record it as an agent decision with rationale in `references/decisions.md` and the owning masterplan section, and move on.
 
 Rephrase questions naturally in context — these are patterns, not scripts to read verbatim. Questions are challenges, not a survey: where evidence (phase-2 findings, the target itself) contradicts an answer, say so plainly and resolve it into a recorded decision. Never ask the user for a fact you can look up yourself — the user's job is decisions.
 

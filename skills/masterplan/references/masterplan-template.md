@@ -4,7 +4,7 @@ Copy this structure into the package's `masterplan.md` and fill every section. *
 
 **Decisions in prose, not artifacts that go stale.** Record decisions as prose and contracts, not brittle file paths or implementation snippets that rot the moment the executor names things differently. One deliberate exception: a snippet that *encodes a decision* — a state machine, reducer, schema, or type shape — may be inlined, trimmed to its decision-rich part (§7's schema is exactly this).
 
-**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a diagram, not just prose. Diagrams are **hand-authored SVG files** in the package's `references/diagrams/` folder, embedded as `![⟨caption⟩](references/diagrams/⟨name⟩.svg)` — full design system, color semantics, per-type layouts, and verification procedure in `references/diagrams.md`. The sections below marked **[diagram]** must carry one; add more wherever a flow, state machine, or relationship is easier seen than read: §5 user flows, §7 data model, §8 multi-actor/async endpoints, §11 architecture, §18 build order. One SVG file per diagram, named after its section (`s5-flow-checkout.svg`, `s7-data-model.svg`, `s11-architecture.svg`). The same node kind gets the same color in every diagram of the package.
+**Diagrams are first-class (so the package doubles as a presentation).** Any step or structure a reader would follow visually gets a diagram, not just prose. Diagrams are **Mermaid fenced blocks** inline in the section they illustrate; diagram type per section, color classes, and verification live in `references/diagrams.md`. The sections below marked **[diagram]** must carry one: §5 user flows, §7 data model, §8 multi-actor/async endpoints, §11 architecture, §18 build order. Add more wherever a flow, state machine, or relationship is easier seen than read. The same node kind gets the same color class in every diagram of the package.
 
 ---
 
@@ -42,11 +42,17 @@ One block per feature. A feature without acceptance criteria does not exist.
 
 ## 5. User flows **[diagram]**
 
-One SVG flow diagram per primary flow, plus a sentence naming its start and success end-state:
+One Mermaid `flowchart` per primary flow, plus a sentence naming its start and success end-state:
 
+````
+```mermaid
+---
+title: Visitor signup → first item published
+---
+flowchart LR
+  landing[Landing]:::entry --> signup[Sign up] --> create[Create item] --> live[Item published]:::ok
 ```
-![Visitor signup → first item published](references/diagrams/s5-flow-first-item.svg)
-```
+````
 
 ## 6. Pages & screens
 
@@ -61,13 +67,24 @@ Inventory of every page/screen with its components — the executing agent build
 
 ## 7. Data model **[diagram]**
 
-The actual schema, not "needs a database". Lead with an SVG data-model diagram (one rect per table, fields as sublabels, relation arrows with cardinality) so relations read at a glance, then the exact schema below it:
+The actual schema, not "needs a database". Lead with a Mermaid `erDiagram` (every table, fields with PK/FK, relations with cardinality) so relations read at a glance, then the exact schema below it:
 
+````
+```mermaid
+erDiagram
+  USERS ||--o{ ITEMS : owns
+  USERS {
+    uuid id PK
+    text email
+  }
+  ITEMS {
+    uuid id PK
+    uuid user_id FK
+  }
 ```
-![users ⋯ items data model](references/diagrams/s7-data-model.svg)
-```
+````
 
-Every table/collection, every field, every relation — the SVG diagram shows them; the schema below is the executable truth:
+Every table/collection, every field, every relation — the diagram shows them; the schema below is the executable truth:
 
 ```sql
 CREATE TABLE users (
@@ -89,11 +106,17 @@ If the product has no persistent data, state that and why.
 
 ## 8. API contracts
 
-Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add an SVG sequence diagram (lifelines + horizontal call arrows top-to-bottom) showing who calls whom in what order:
+Internal endpoints the frontend consumes — route, payload, response, error shape. For any endpoint that is **multi-actor or async** (webhook, background job, third-party callback, streaming), add a Mermaid `sequenceDiagram` showing who calls whom in what order:
 
+````
+```mermaid
+sequenceDiagram
+  Browser->>API: POST /api/items
+  API->>DB: insert item
+  API-)Worker: enqueue thumbnail job
+  API-->>Browser: 201 item
 ```
-![POST /api/items sequence](references/diagrams/s8-seq-create-item.svg)
-```
+````
 
 The endpoint list — route, payload, response, error shape:
 
@@ -130,11 +153,20 @@ One stack, already decided: the phase-4 comparison (2–3 options, ratified by t
 
 ## 11. Architecture **[diagram]**
 
-How the pieces connect — a short prose description plus an SVG diagram with dashed boundary rects for what runs where (browser / host / region):
+How the pieces connect — a short prose description plus a Mermaid `flowchart` with one `subgraph` per boundary of what runs where (browser / host / region):
 
+````
+```mermaid
+flowchart LR
+  subgraph Browser
+    ui[Web app]:::entry
+  end
+  subgraph Host
+    api[API]:::svc --> db[(Postgres)]:::db
+  end
+  ui --> api
 ```
-![System architecture](references/diagrams/s11-architecture.svg)
-```
+````
 
 Name the boundaries: what runs where, what talks to what, what is stateless.
 
@@ -190,9 +222,12 @@ This section is the milestone map, not executor prose. Decompose every milestone
 
 Milestones are **tracer bullets**: after the walking skeleton, each is a complete vertical slice through every layer (UI → API → data), demoable alone. A milestone may contain many dependency-ordered tickets; each ticket names exact target paths/contracts, changes, retained and changed behavior, acceptance criteria, commands, evidence destination, and rollback boundary. When prior art contributes code, ticket source repository + pinned SHA + source paths + license/attribution are mandatory. No horizontal tickets, cyclic dependencies, or catch-all integration tickets.
 
+````
+```mermaid
+flowchart TD
+  M1[M1 Walking skeleton] --> M2[M2 Core feature] --> M9[M9 Full QA]
 ```
-![Build order — blocking edges](references/diagrams/s18-build-order.svg)
-```
+````
 
 | Milestone | Outcome | Ticket IDs | Depends on |
 |---|---|---|---|
@@ -200,7 +235,7 @@ Milestones are **tracer bullets**: after the walking skeleton, each is a complet
 | `M2` — ⟨core feature⟩ | ⟨demoable feature through every layer⟩ | `PRJ-002`, `PRJ-003` | `M1` |
 | `M9` — Full QA | Every §4 criterion and required UI baseline check evidenced | `PRJ-999` | all feature tickets |
 
-**Ticket graph:** [ticket catalog](references/tickets/INDEX.md) is deterministic graph truth. Every catalog ticket appears once in §18 table with matching milestone; §18 contains no unknown IDs. Generate SVG build-order diagram from this validated catalog graph rather than treating SVG as independently parsed graph data.
+**Ticket graph:** [ticket catalog](references/tickets/INDEX.md) is deterministic graph truth. Every catalog ticket appears once in §18 table with matching milestone; §18 contains no unknown IDs. Generate the build-order diagram from this validated catalog graph; the diagram is a view, never independent graph data.
 
 **Testing strategy (decided in phase 4):** tests target **external behaviour at acceptance level** — what the product does, never how it is implemented — so they survive refactors. Each ticket lands with tests for its mapped §4 acceptance criteria. Full QA ticket verifies every criterion, required primary flow, and — for UI projects — `references/ui-baseline.md` with evidence.
 

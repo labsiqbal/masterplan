@@ -16,10 +16,15 @@
   - Run full-fork planning against a small MIT repository.
   - Test one-to-one GitHub Issues publish, claim, status, evidence, and dependency round-trip in a sandbox repository.
   - Build one small product through every ticket to final QA.
-  - Open and review generated `masterplan.html` in a browser, including embedded SVGs and offline behavior.
+  - Open and review generated `masterplan.html` in a browser, including rendered Mermaid SVGs and offline behavior.
   - Done when receipts exist for all four runs and discovered failures have regression tests.
 
 ## Done
+
+- [x] masterplan-slim-mermaid - Slim SKILL.md and make Mermaid the diagram source (completed 2026-11-17)
+  - SKILL.md cut from 31.5 KB to about 20 KB with every rule kept; generator state moved to `references/decisions-template.md`; dev-cost value stated once; "proportional depth, uniform shape" made explicit for small scopes.
+  - Diagrams are inline Mermaid blocks; `scripts/render-diagrams.py` renders them to SVG for the deck, with hand-authored SVG as the no-renderer fallback. Validator rejects unclosed, empty, or unknown-type Mermaid blocks.
+  - Evidence: validator suite passes with 2 new tests; every documented Mermaid example rendered through mermaid-cli 11.4.2 with system Chrome.
 
 - [x] masterplan-installed-activation - Install and enable Masterplan on Codex, Hermes, and Grok (completed 2026-09-10)
   - Canonical install is a symlink from `~/.agents/skills/masterplan` to lab `skills/masterplan`. Codex, Hermes user+profiles, and Grok point at that tree. Hermes `skills.disabled` no longer lists masterplan. Stale lab-profile lavish copy removed.

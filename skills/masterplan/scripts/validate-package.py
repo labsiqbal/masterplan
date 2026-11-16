@@ -51,6 +51,14 @@ TICKET_FIELDS = (
     "Status",
 )
 NA = re.compile(r"^(?:N/A|none)(?:\b|\s*[—-])", re.IGNORECASE)
+MERMAID_TYPES = frozenset({
+    "flowchart", "graph", "sequenceDiagram", "classDiagram", "stateDiagram",
+    "stateDiagram-v2", "erDiagram", "journey", "gantt", "pie", "quadrantChart",
+    "requirementDiagram", "gitGraph", "mindmap", "timeline", "sankey-beta",
+    "xychart-beta", "block-beta", "packet-beta", "architecture-beta", "kanban",
+    "radar-beta", "C4Context", "C4Container", "C4Component", "C4Dynamic",
+    "C4Deployment",
+})
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -74,6 +82,42 @@ def live_markdown(text: str) -> str:
         else:
             live.append(line)
     return "".join(live)
+
+
+def mermaid_blocks(text: str) -> list[tuple[int, list[str], bool]]:
+    """Return (opening line, body lines, closed) for each ```mermaid fence."""
+    blocks: list[tuple[int, list[str], bool]] = []
+    fence: tuple[str, int, bool, int, list[str]] | None = None
+    for number, line in enumerate(text.splitlines(), 1):
+        if fence is None:
+            marker = re.match(r"^ {0,3}(`{3,}|~{3,})\s*([^\s`]*)", line)
+            if marker:
+                token = marker.group(1)
+                is_mermaid = marker.group(2).lower() == "mermaid"
+                fence = (token[0], len(token), is_mermaid, number, [])
+        elif re.match(rf"^ {{0,3}}{re.escape(fence[0])}{{{fence[1]},}}\s*$", line):
+            if fence[2]:
+                blocks.append((fence[3], fence[4], True))
+            fence = None
+        elif fence[2]:
+            fence[4].append(line)
+    if fence is not None and fence[2]:
+        blocks.append((fence[3], fence[4], False))
+    return blocks
+
+
+def mermaid_type(body: list[str]) -> str:
+    """First diagram keyword after frontmatter, directives and comments."""
+    in_frontmatter = False
+    for position, raw in enumerate(body):
+        line = raw.strip()
+        if line == "---" and (position == 0 or in_frontmatter):
+            in_frontmatter = not in_frontmatter
+            continue
+        if in_frontmatter or not line or line.startswith("%%"):
+            continue
+        return line.split()[0]
+    return ""
 
 
 def markdown_tables(text: str) -> list[list[tuple[str, list[str]]]]:
@@ -636,6 +680,13 @@ def main(root_arg: str) -> int:
                 fail(errors, f"link escapes package: {path.relative_to(root)} -> {target}")
             elif not resolved.exists():
                 fail(errors, f"broken link: {path.relative_to(root)} -> {target}")
+        for line, body, closed in mermaid_blocks(text):
+            where = f"{path.relative_to(root)}:{line}"
+            if not closed:
+                fail(errors, f"unclosed Mermaid block: {where}")
+            kind = mermaid_type(body)
+            if kind not in MERMAID_TYPES:
+                fail(errors, f"Mermaid block without a known diagram type: {where}: {kind or 'empty'}")
 
     for path in sorted((root / "references" / "diagrams").glob("*.svg")):
         try:
