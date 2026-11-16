@@ -42,7 +42,7 @@ Trigger the red-team gate again when the change touches **the data model, securi
 
 In one pass:
 
-1. **Update the affected masterplan sections** — rewrite them fully; no "see changelog" stubs inside sections. If a changed section carries a diagram (or the change touches flows/data model/architecture/build order), update the corresponding SVG in `references/diagrams/` and re-run the diagram checks (`references/diagrams.md`).
+1. **Update the affected masterplan sections** — rewrite them fully; no "see changelog" stubs inside sections. If a changed section carries a diagram (or the change touches flows/data model/architecture/build order), update its Mermaid block and re-run the diagram checks (`references/diagrams.md`); the deck re-renders the SVGs.
 2. **Bump the version** (masterplan §22): minor for additive changes, major when already-built behavior changes.
 3. **Append the changelog entry**: `- **v⟨x.y⟩ — YYYY-MM-DD — ⟨one-line summary⟩**`
 4. **Revise ticket contracts**: update affected immutable contracts only through revise mode; add new stable IDs rather than reusing removed ones; update `references/tickets/INDEX.md`, dependency edges, target boundaries, and evidence destinations. Preserve superseded contracts or history per project policy.

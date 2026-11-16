@@ -51,6 +51,14 @@ TICKET_FIELDS = (
     "Status",
 )
 NA = re.compile(r"^(?:N/A|none)(?:\b|\s*[—-])", re.IGNORECASE)
+MERMAID_TYPES = frozenset({
+    "flowchart", "graph", "sequenceDiagram", "classDiagram", "stateDiagram",
+    "stateDiagram-v2", "erDiagram", "journey", "gantt", "pie", "quadrantChart",
+    "requirementDiagram", "gitGraph", "mindmap", "timeline", "sankey-beta",
+    "xychart-beta", "block-beta", "packet-beta", "architecture-beta", "kanban",
+    "radar-beta", "C4Context", "C4Container", "C4Component", "C4Dynamic",
+    "C4Deployment",
+})
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -74,6 +82,62 @@ def live_markdown(text: str) -> str:
         else:
             live.append(line)
     return "".join(live)
+
+
+def mermaid_blocks(text: str) -> list[tuple[int, list[str], bool]]:
+    """Return (opening line, body lines, closed) for each ```mermaid fence."""
+    blocks: list[tuple[int, list[str], bool]] = []
+    fence: tuple[str, int, bool, int, list[str]] | None = None
+    for number, line in enumerate(text.splitlines(), 1):
+        if fence is None:
+            marker = re.match(r"^ {0,3}(`{3,}|~{3,})\s*([^\s`]*)", line)
+            if marker:
+                token = marker.group(1)
+                is_mermaid = marker.group(2).lower() == "mermaid"
+                fence = (token[0], len(token), is_mermaid, number, [])
+        elif re.match(rf"^ {{0,3}}{re.escape(fence[0])}{{{fence[1]},}}\s*$", line):
+            if fence[2]:
+                blocks.append((fence[3], fence[4], True))
+            fence = None
+        elif fence[2]:
+            fence[4].append(line)
+    if fence is not None and fence[2]:
+        blocks.append((fence[3], fence[4], False))
+    return blocks
+
+
+def mermaid_type(body: list[str]) -> str:
+    """First diagram keyword after frontmatter, directives and comments."""
+    in_frontmatter = False
+    for position, raw in enumerate(body):
+        line = raw.strip()
+        if line == "---" and (position == 0 or in_frontmatter):
+            in_frontmatter = not in_frontmatter
+            continue
+        if in_frontmatter or not line or line.startswith("%%"):
+            continue
+        return line.split()[0]
+    return ""
+
+
+def heading_slug(text: str) -> str:
+    """GitHub-style heading anchor: lowercase, drop punctuation, spaces to hyphens."""
+    text = re.sub(r"`|\*\*|__", "", text.strip().lower())
+    return re.sub(r"[^\w\- ]", "", text).replace(" ", "-")
+
+
+def heading_anchors(text: str) -> set[str]:
+    anchors: set[str] = set()
+    seen: dict[str, int] = {}
+    for line in live_markdown(text).splitlines():
+        match = re.match(r"^ {0,3}#{1,6}\s+(.*?)\s*#*\s*$", line)
+        if not match:
+            continue
+        slug = heading_slug(re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", match.group(1)))
+        count = seen.get(slug, 0)
+        seen[slug] = count + 1
+        anchors.add(slug if count == 0 else f"{slug}-{count}")
+    return anchors
 
 
 def markdown_tables(text: str) -> list[list[tuple[str, list[str]]]]:
@@ -624,18 +688,29 @@ def main(root_arg: str) -> int:
     markdown = sorted(root.rglob("*.md"))
     for path in markdown:
         text = path.read_text(encoding="utf-8")
-        for match in PLACEHOLDER.finditer(text):
+        for match in PLACEHOLDER.finditer(re.sub(r"`(?:TBD|TODO|FIXME)`", lambda m: " " * len(m.group()), text)):
             line = text.count("\n", 0, match.start()) + 1
             fail(errors, f"placeholder: {path.relative_to(root)}:{line}: {match.group()}")
         for raw in markdown_link_targets(text):
-            target = raw.split("#", 1)[0].strip()
-            if not target or re.match(r"(?:https?|mailto):", target):
+            target, _, anchor = raw.partition("#")
+            target, anchor = target.strip(), anchor.strip()
+            if re.match(r"(?:https?|mailto):", target):
                 continue
-            resolved = (path.parent / target).resolve()
+            resolved = (path.parent / target).resolve() if target else path.resolve()
             if root not in resolved.parents and resolved != root:
                 fail(errors, f"link escapes package: {path.relative_to(root)} -> {target}")
             elif not resolved.exists():
                 fail(errors, f"broken link: {path.relative_to(root)} -> {target}")
+            elif anchor and resolved.suffix == ".md" and resolved.is_file():
+                if anchor not in heading_anchors(resolved.read_text(encoding="utf-8")):
+                    fail(errors, f"broken anchor: {path.relative_to(root)} -> {raw}")
+        for line, body, closed in mermaid_blocks(text):
+            where = f"{path.relative_to(root)}:{line}"
+            if not closed:
+                fail(errors, f"unclosed Mermaid block: {where}")
+            kind = mermaid_type(body)
+            if kind not in MERMAID_TYPES:
+                fail(errors, f"Mermaid block without a known diagram type: {where}: {kind or 'empty'}")
 
     for path in sorted((root / "references" / "diagrams").glob("*.svg")):
         try:

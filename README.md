@@ -4,7 +4,7 @@
 
 An agent skill that turns a product idea, a given repo/product/workflow, or a long messy chat into a **masterplan package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted. Given a readable repo, it maps folders one by one and reconstructs logic before deciding what our version keeps, drops, or changes.
 
-The core is a **portable text pipeline** — plain Markdown, diagrams as hand-authored SVG files (dark tech design system, semantic colors, no rendering library) — that runs on any agent runtime. The finished package carries `masterplan.html`: a self-contained walkthrough render with the SVGs inlined, offline-openable, styled by the product's own design direction.
+The core is a **portable text pipeline** — plain Markdown with diagrams as inline Mermaid blocks — that runs on any agent runtime. The finished package carries `masterplan.html`: a self-contained walkthrough render with the diagrams inlined as SVG, offline-openable, styled by the product's own design direction. Package shape is uniform; depth scales with scope, so a small tool gets a short package.
 
 ## How it works
 
@@ -49,7 +49,7 @@ When a project that already has a package needs a change, the skill runs only th
 
 ## Install
 
-Copy `skills/masterplan/` into your agent's skill directory. The core skill is plain English with no engine-specific dependencies — the text pipeline completes on any runtime. The HTML walkthrough deck is authored directly by the agent (single file, inline CSS, diagrams inlined as SVG); no external tooling required.
+Copy `skills/masterplan/` into your agent's skill directory. The core skill is plain English with no engine-specific dependencies — the text pipeline completes on any runtime. The HTML walkthrough deck is built by `scripts/build-deck.py` (Python stdlib, single file, inline CSS, theme from the product's design direction). `scripts/render-diagrams.py` renders the Mermaid blocks with mermaid-cli (via `mmdc` or `npx`); without Node, the agent hand-authors the deck SVGs instead.
 
 | System | Location |
 |---|---|
@@ -85,10 +85,13 @@ masterplan/
             ├── detail-index-template.md (navigation for large multi-doc packages)
             ├── revise-playbook.md       (change → impact → delta)
             ├── ui-baseline.md           (standing UI interaction standard)
-            ├── diagrams.md              (SVG diagram system + verification)
+            ├── diagrams.md              (Mermaid diagram system, deck render, verification)
+            ├── decisions-template.md    (generator state + resume)
             └── html-export.md           (self-contained HTML walkthrough deck)
         └── scripts/
-            └── validate-package.py      (deterministic package validator)
+            ├── validate-package.py      (deterministic package validator)
+            ├── render-diagrams.py       (Mermaid blocks → deck SVGs)
+            └── build-deck.py            (package → self-contained masterplan.html)
 ```
 
 ## License

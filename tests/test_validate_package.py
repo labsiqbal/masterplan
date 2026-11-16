@@ -8,6 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "skills/masterplan/scripts/validate-package.py"
+RENDERER = ROOT / "skills/masterplan/scripts/render-diagrams.py"
+DECK = ROOT / "skills/masterplan/scripts/build-deck.py"
 
 
 def write(root: Path, relative: str, content: str) -> None:
@@ -80,7 +82,8 @@ def ticket_index(rows: str) -> str:
 
 def masterplan_ticket_map(rows: str) -> str:
     return (
-        "# Masterplan\n\n![Architecture](references/diagrams/architecture.svg)\n\n"
+        "# Masterplan\n\n## 11. Architecture\n\n"
+        "```mermaid\nflowchart LR\n  Browser --> API\n```\n\n"
         "## 18. Build order\n\n"
         "| Milestone | Outcome | Ticket IDs | Depends on |\n"
         "|---|---|---|---|\n"
@@ -726,6 +729,114 @@ def test_repo_lock_provenance_fails_closed() -> None:
         assert "requires url + commit SHA" in failed.stdout
 
 
+def test_mermaid_blocks_need_known_type_and_closing_fence() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        original = (root / "masterplan.md").read_text(encoding="utf-8")
+        write(
+            root,
+            "masterplan.md",
+            original
+            + "\n```mermaid\n---\ntitle: Data model\n---\n%% users own items\nerDiagram\n"
+            + "  USERS ||--o{ ITEMS : owns\n```\n"
+            + "\n```text\nnot a diagram\n```\n",
+        )
+        passed = run(root)
+        assert passed.returncode == 0, passed.stdout + passed.stderr
+
+        for bad, message in (
+            ("```mermaid\nflowchrt LR\n  A --> B\n```\n", "flowchrt"),
+            ("```mermaid\n%% only a comment\n```\n", "empty"),
+            ("```mermaid\nflowchart LR\n  A --> B\n", "unclosed Mermaid block"),
+        ):
+            write(root, "masterplan.md", original + "\n" + bad)
+            failed = run(root)
+            assert failed.returncode == 1, failed.stdout + failed.stderr
+            assert message in failed.stdout, failed.stdout
+
+
+def test_render_plan_names_svgs_by_section() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        write(
+            root,
+            "masterplan.md",
+            "# Masterplan\n\n## 7. Data model\n\n```mermaid\nerDiagram\n  A ||--o{ B : has\n```\n\n"
+            "## 11. Architecture\n\n```mermaid\nflowchart LR\n  A --> B\n```\n\n"
+            "```mermaid\nflowchart LR\n  C --> D\n```\n",
+        )
+        write(root, "references/flows/checkout.md", "# Checkout\n\n```mermaid\nsequenceDiagram\n  A->>B: pay\n```\n")
+        result = subprocess.run(
+            ["python3", str(RENDERER), str(root), "--dry-run"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "masterplan.md:5 -> references/diagrams/s7-1.svg" in result.stdout, result.stdout
+        assert "masterplan.md:12 -> references/diagrams/s11-1.svg" in result.stdout, result.stdout
+        assert "-> references/diagrams/s11-2.svg" in result.stdout, result.stdout
+        assert "references/flows/checkout.md:3 -> references/diagrams/references-flows-checkout-1.svg" in result.stdout, result.stdout
+
+
+def test_anchor_links_must_match_a_heading() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        original = (root / "masterplan.md").read_text(encoding="utf-8")
+        write(root, "masterplan.md", original + "\nSee [build order](#18-build-order) and [arch](masterplan.md#11-architecture).\n")
+        passed = run(root)
+        assert passed.returncode == 0, passed.stdout + passed.stderr
+        write(root, "references/tickets/MP-001.md", ticket("MP-001").replace(
+            "[Workflow binding](../workflow-binding.md)", "[Data model](../../masterplan.md#7-data-modl)"))
+        failed = run(root)
+        assert failed.returncode == 1, failed.stdout
+        assert "broken anchor: references/tickets/MP-001.md -> ../../masterplan.md#7-data-modl" in failed.stdout, failed.stdout
+
+
+def test_placeholder_words_in_backticks_are_allowed() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        write(root, "references/decisions.md", "# Decisions\n\nPlaceholder scan for `TBD`, `TODO`, `FIXME`: none found.\n")
+        passed = run(root)
+        assert passed.returncode == 0, passed.stdout + passed.stderr
+        write(root, "references/decisions.md", "# Decisions\n\nAuth flow TBD.\n")
+        failed = run(root)
+        assert failed.returncode == 1 and "placeholder" in failed.stdout, failed.stdout
+
+
+def test_deck_builder_inlines_renders_and_rewrites_links() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        base_package(root)
+        original = (root / "masterplan.md").read_text(encoding="utf-8")
+        write(root, "masterplan.md", original + "\n**Acceptance criteria:**\n- [ ] saves a link\n- [x] lists links\n\n"
+              "Contract: [MP-001](references/tickets/MP-001.md), [arch](#11-architecture).\n")
+        build = lambda: subprocess.run(["python3", str(DECK), str(root)], check=False, capture_output=True, text=True)
+
+        missing = build()
+        assert missing.returncode == 1 and "missing diagram render references/diagrams/s11-1.svg" in missing.stdout, missing.stdout
+
+        svg = '<svg xmlns="http://www.w3.org/2000/svg" id="{0}"><defs><marker id="{0}-arrow"/></defs><text>Browser</text></svg>'
+        write(root, "references/diagrams/s11-1.svg", svg.format("s11-1"))
+        built = build()
+        assert built.returncode == 0, built.stdout + built.stderr
+        page = (root / "masterplan.html").read_text(encoding="utf-8")
+        assert '<figure class="diagram"><svg' in page and "s11-1-arrow" in page
+        assert '<li class="task"><input type="checkbox" disabled aria-label="done"> saves a link</li>' in page, page
+        assert 'href="#references-tickets-mp-001"' in page and 'id="references-tickets-mp-001"' in page
+        assert 'href="#mp--11-architecture"' in page and 'id="mp--11-architecture"' in page
+        assert "http" not in page.replace("http://www.w3.org/2000/svg", "")
+
+        write(root, "references/diagrams/architecture.svg", svg.format("s11-1"))
+        write(root, "masterplan.md", original + "\n![old](references/diagrams/architecture.svg)\n")
+        clash = build()
+        assert clash.returncode == 1 and "also used by" in clash.stdout, clash.stdout
+
+
 if __name__ == "__main__":
     test_base_passes()
     test_orphan_detail_fails_then_index_passes()
@@ -753,4 +864,9 @@ if __name__ == "__main__":
     test_fallback_concurrency_requires_external_atomic_claim()
     test_executor_docs_keep_needs_rework_claimable()
     test_repo_lock_provenance_fails_closed()
+    test_mermaid_blocks_need_known_type_and_closing_fence()
+    test_render_plan_names_svgs_by_section()
+    test_anchor_links_must_match_a_heading()
+    test_placeholder_words_in_backticks_are_allowed()
+    test_deck_builder_inlines_renders_and_rewrites_links()
     print("PASS: validate-package tests")

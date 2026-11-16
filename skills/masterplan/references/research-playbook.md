@@ -48,7 +48,9 @@ This feeds **masterplan §15 (design direction)** as concrete, sourced conventio
 The standing assumption is **we are building** — research feeds the build, it does not gate it. Decide honestly how heavily to absorb what exists (every rung is a BUILD outcome):
 
 ```
-Is there a compatibly-licensed base already close to the pitch?
+Is there a compatibly-licensed base already close to the pitch, in scope and size?
+│  (A much larger superset, e.g. a multi-user platform for a single-user
+│   tool, is NO: borrow its patterns under DIFFERENTIATE.)
 ├─ YES → FORK & ADAPT.
 │        Start from it, modify heavily, make it yours. masterplan §14 anchors to
 │        the base repo; the build order starts from its scaffold, not from zero.

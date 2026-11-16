@@ -99,6 +99,6 @@ Before the build is done, the executing agent walks a real interactive surface a
 2. Trigger its **loading, empty, error, and success** states and confirm each renders (throttle/kill the network to force them).
 3. Confirm every button shows **hover, focus, disabled, and in-flight** states and can't double-submit.
 4. Resize from mobile to desktop — no horizontal scroll, no layout break, no shift on load.
-5. Note any deliberate exceptions in masterplan §20.
+5. Record any deliberate exception in the ticket's evidence receipt; the masterplan is immutable during execution, so revise mode later folds it into §20.
 
 "Looks right in one screenshot" is not evidence. Driving the states is.
