@@ -4,3 +4,5 @@ node_modules/
 
 # internal design/planning notes — not published
 docs/
+__pycache__/
+*.pyc

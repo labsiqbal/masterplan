@@ -28,6 +28,7 @@ SECTION = re.compile(r"^##\s+(\d+)\.")
 
 
 def load_validator():
+    sys.dont_write_bytecode = True
     path = Path(__file__).with_name("validate-package.py")
     spec = importlib.util.spec_from_file_location("validate_package", path)
     module = importlib.util.module_from_spec(spec)
