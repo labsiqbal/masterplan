@@ -2,21 +2,13 @@
 
 ## In flight
 
-## Queued
+## Migrated work
 
-- [ ] masterplan-entry-routing - Sharpen Masterplan entry and exit boundaries (kind: ship)
-  - Add a lightweight capability-gap / build-versus-existing-solution check before committing to a custom product build.
-  - Route multi-session strategic fog to `wayfinder`.
-  - Route unresolved changes in an existing codebase to `grill-with-docs`.
-  - Route already-resolved scoped implementation planning to `to-spec`.
-  - For existing projects, preserve canonical domain decisions in project `CONTEXT.md` and ADRs; Masterplan links them instead of becoming a competing source of truth.
-  - Done when routing examples and boundary regression checks pass without weakening greenfield Masterplan behavior.
-
-- [ ] masterplan-beta-field-validation - Gather remaining evidence before version 1.0 (kind: test)
-  - Run full-fork planning against a small MIT repository.
-  - Test one-to-one GitHub Issues publish, claim, status, evidence, and dependency round-trip in a sandbox repository.
-  - Done when receipts exist for both runs and discovered failures have regression tests.
-  - Done 2026-11-17: greenfield build through every ticket to final QA, and deck review in a browser (see masterplan-slim-mermaid).
+Open `masterplan-entry-routing` and `masterplan-beta-field-validation` tasks
+now live in [MF Skills backlog](https://github.com/labsiqbal/mf-skills/blob/main/backlog.md).
+This repository has no active skill bindings or local open queue. The imported
+source is `fa8c5d3e3b723ea4c158f3dfaa8098033e9793ed`; full Git history and
+the MIT license are preserved by the MF Skills import.
 
 ## Done
 

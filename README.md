@@ -1,5 +1,13 @@
 # masterplan
 
+> Moved to [MF Skills](https://github.com/labsiqbal/mf-skills/tree/main/skills/mf-masterplan)
+> as **mf-masterplan**. This repository retains standalone source history;
+> maintenance and open work now live in MF Skills.
+>
+> Install: `npx skills add labsiqbal/mf-skills --skill mf-masterplan -g`
+>
+> The documentation below describes the retained standalone snapshot.
+
 > *Every decision made before the first line of code.*
 
 An agent skill that turns a product idea, a given repo/product/workflow, or a long messy chat into a **masterplan package**: a folder any capable coding agent can build end-to-end from a single prompt, with resumable progress if a run is interrupted. Given a readable repo, it maps folders one by one and reconstructs logic before deciding what our version keeps, drops, or changes.
